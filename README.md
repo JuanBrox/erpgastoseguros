@@ -1,6 +1,6 @@
-# 🐱 GatoSeguro · Intranet
+# 🐱 Top Redes · Intranet
 
-Hub de documentación estratégica interna para GatoSeguro, empresa de instalación de redes de protección para gatos.
+Hub de documentación estratégica interna para Top Redes, empresa de instalación de redes de protección para gatos.
 
 ## 📁 Estructura
 
@@ -47,4 +47,4 @@ Este repositorio contiene documentación estratégica confidencial. No compartir
 
 ---
 
-*GatoSeguro · 2026*
+*Top Redes · 2026*
