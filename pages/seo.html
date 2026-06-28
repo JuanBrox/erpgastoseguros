@@ -128,8 +128,30 @@
   .bar.blue { background: var(--blue); }
   .bar.gold { background: var(--gold); }
 </style>
+<style>
+.gs-navbar{position:sticky;top:0;z-index:9999;background:#1A1410;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;border-bottom:1px solid rgba(255,255,255,0.07);font-family:"DM Sans",system-ui,sans-serif;}
+.gs-navbar-left{display:flex;align-items:center;gap:1.2rem;}
+.gs-back{display:flex;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.82rem;font-weight:500;padding:0.35rem 0.8rem;border-radius:7px;border:1px solid rgba(255,255,255,0.1);transition:all 0.15s;}
+.gs-back:hover{background:rgba(255,255,255,0.07);color:#fff;}
+.gs-logo{font-size:0.95rem;font-weight:700;color:#fff;letter-spacing:-0.01em;}
+.gs-logo span{color:#C8641A;}
+.gs-navbar-right{display:flex;align-items:center;gap:0.8rem;}
+.gs-web-link{display:flex;align-items:center;gap:0.4rem;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.78rem;font-weight:500;padding:0.35rem 0.9rem;border-radius:7px;border:1px solid rgba(255,255,255,0.1);transition:all 0.15s;}
+.gs-web-link:hover{background:#C8641A;color:#fff;border-color:#C8641A;}
+.gs-dot{width:6px;height:6px;border-radius:50%;background:#2D6A4F;display:inline-block;}
+</style>
 </head>
 <body>
+<div class="gs-navbar">
+  <div class="gs-navbar-left">
+    <a href="../index.html" class="gs-back">&#8592; Volver al hub</a>
+    <span class="gs-logo">Gato<span>Seguro</span> &middot; Intranet</span>
+  </div>
+  <div class="gs-navbar-right">
+    <span style="font-size:0.72rem;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:0.4rem"><span class="gs-dot"></span>Live</span>
+    <a href="https://webgatoseguros.netlify.app/" target="_blank" class="gs-web-link">&#127760; Ver web corporativa &#8599;</a>
+  </div>
+</div>
 
 <header>
   <div>
