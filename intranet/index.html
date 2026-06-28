@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GatoSeguro · Intranet</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<style>
+  :root {
+    --amber: #C8641A;
+    --amber-l: rgba(200,100,26,0.12);
+    --dark: #1A1410;
+    --mid: #5C4A3A;
+    --light: #9E8B7A;
+    --cream: #FAF7F3;
+    --white: #fff;
+    --green: #2D6A4F;
+    --blue: #1A4D7A;
+    --red: #B83232;
+    --rule: rgba(90,74,62,0.1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--dark);
+    padding: 0 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 900; color: var(--white);
+  }
+  .logo span { color: var(--amber); }
+  .topbar-right { display: flex; align-items: center; gap: 1.5rem; }
+  .topbar-badge {
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.12em; color: rgba(255,255,255,0.3);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 0.3rem 0.8rem; border-radius: 50px;
+  }
+  .topbar-date { font-size: 0.78rem; color: rgba(255,255,255,0.35); }
+
+  /* HERO */
+  .hero {
+    background: var(--dark);
+    padding: 4rem 3rem 5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image:
+      linear-gradient(rgba(200,100,26,0.8) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,100,26,0.8) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+  .hero-eyebrow {
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--amber); margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    font-weight: 900; color: var(--white); line-height: 1.08;
+    letter-spacing: -0.02em; margin-bottom: 1rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--amber); }
+  .hero-sub { color: rgba(255,255,255,0.45); font-size: 0.95rem; max-width: 560px; line-height: 1.7; }
+  .hero-stats {
+    display: flex; gap: 3rem; margin-top: 2.5rem;
+    padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .hero-stat span { display: block; }
+  .hero-stat .n {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 900; color: var(--amber); line-height: 1;
+  }
+  .hero-stat .l { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* MAIN */
+  .main { max-width: 1100px; margin: 0 auto; padding: 3rem; }
+
+  /* SECTION HEADER */
+  .sh {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .sh h2 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: var(--light); }
+  .sh::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+
+  /* CARDS GRID */
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-bottom: 3rem; }
+  .cards.single { grid-template-columns: 1fr; }
+
+  .card {
+    background: var(--white); border-radius: 16px;
+    border: 1px solid var(--rule);
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+    transition: all 0.2s; overflow: hidden;
+    position: relative;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.08); border-color: var(--amber); }
+  .card-accent { height: 4px; width: 100%; }
+  .card-body { padding: 1.8rem 2rem; flex: 1; }
+  .card-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .card-tag {
+    display: inline-block; font-size: 0.65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 0.2rem 0.7rem; border-radius: 50px; margin-bottom: 0.8rem;
+  }
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700; margin-bottom: 0.6rem; line-height: 1.2;
+  }
+  .card p { font-size: 0.85rem; color: var(--mid); line-height: 1.7; margin-bottom: 1.2rem; }
+  .card-meta { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .card-meta-item { font-size: 0.72rem; color: var(--light); display: flex; align-items: center; gap: 0.3rem; }
+  .card-footer {
+    padding: 1rem 2rem;
+    border-top: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(90,74,62,0.02);
+  }
+  .card-footer-label { font-size: 0.78rem; font-weight: 600; color: var(--amber); }
+  .card-arrow { font-size: 1.1rem; color: var(--amber); transition: transform 0.2s; }
+  .card:hover .card-arrow { transform: translateX(4px); }
+
+  /* QUICK LINKS */
+  .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 3rem; }
+  .quick-card {
+    background: var(--white); border-radius: 12px; padding: 1.2rem;
+    border: 1px solid var(--rule); text-decoration: none; color: inherit;
+    transition: all 0.2s; display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 0.6rem;
+  }
+  .quick-card:hover { border-color: var(--amber); background: var(--amber-l); }
+  .quick-card .qi { font-size: 1.6rem; }
+  .quick-card .ql { font-size: 0.8rem; font-weight: 600; color: var(--dark); }
+  .quick-card .qs { font-size: 0.7rem; color: var(--light); }
+
+  /* ANNOUNCEMENT */
+  .announce {
+    background: var(--amber); border-radius: 14px;
+    padding: 1.5rem 2rem; margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .announce-icon { font-size: 2rem; flex-shrink: 0; }
+  .announce-text h4 { color: var(--white); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .announce-text p { color: rgba(255,255,255,0.8); font-size: 0.82rem; margin: 0; }
+  .announce-btn {
+    margin-left: auto; flex-shrink: 0;
+    background: var(--white); color: var(--amber);
+    padding: 0.55rem 1.2rem; border-radius: 50px;
+    font-size: 0.8rem; font-weight: 700; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .announce-btn:hover { background: var(--dark); color: var(--white); }
+
+  /* STATUS TABLE */
+  .status-table { width: 100%; border-collapse: collapse; }
+  .status-table th {
+    padding: 0.6rem 1rem; text-align: left;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--light);
+    border-bottom: 2px solid var(--dark);
+  }
+  .status-table td {
+    padding: 0.8rem 1rem; border-bottom: 1px solid var(--rule);
+    font-size: 0.83rem; color: var(--mid);
+  }
+  .status-table tr:last-child td { border-bottom: none; }
+  .status-table tr:hover td { background: var(--amber-l); }
+  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .dot-live { background: var(--green); }
+  .dot-wip  { background: #F59E0B; }
+  .dot-plan { background: var(--light); }
+
+  /* BADGE */
+  .badge { display: inline-block; padding: 0.18rem 0.6rem; border-radius: 4px; font-size: 0.68rem; font-weight: 700; }
+  .b-green { background: rgba(45,106,79,0.12); color: var(--green); }
+  .b-amber { background: var(--amber-l); color: var(--amber); }
+  .b-blue  { background: rgba(26,77,122,0.12); color: var(--blue); }
+  .b-gray  { background: rgba(90,74,62,0.1); color: var(--mid); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1100px; margin: 0 auto;
+    font-size: 0.75rem; color: var(--light);
+  }
+  footer strong { color: var(--dark); }
+
+  @media (max-width: 768px) {
+    .topbar { padding: 0 1.5rem; }
+    .hero { padding: 2.5rem 1.5rem 3rem; }
+    .main { padding: 2rem 1.5rem; }
+    .cards, .quick-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .announce { flex-wrap: wrap; }
+    .announce-btn { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">Gato<span>Seguro</span></div>
+  <div class="topbar-right">
+    <span class="topbar-badge">🔒 Intranet</span>
+    <span class="topbar-date" id="fecha"></span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Panel de documentación estratégica · 2026</div>
+    <h1>Hub de <em>estrategia</em><br>y operaciones</h1>
+    <p class="hero-sub">Acceso centralizado al plan de posicionamiento SEO, sistema ERP de gestión, informe de mercado y herramientas de la empresa.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="n">4</span><span class="l">Documentos activos</span></div>
+      <div class="hero-stat"><span class="n">2026</span><span class="l">Versión estratégica</span></div>
+      <div class="hero-stat"><span class="n">🐱</span><span class="l">GatoSeguro</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- AVISO -->
+  <div class="announce">
+    <div class="announce-icon">🚀</div>
+    <div class="announce-text">
+      <h4>Nuevo: Informe de mercado actualizado a junio 2026</h4>
+      <p>Análisis competitivo completo, mapa de precios, geografía y 8 conclusiones estratégicas.</p>
+    </div>
+    <a href="pages/informe.html" class="announce-btn">Ver informe →</a>
+  </div>
+
+  <!-- ACCESO RÁPIDO -->
+  <div class="sh"><h2>Acceso rápido</h2></div>
+  <div class="quick-grid" style="margin-bottom:2.5rem">
+    <a href="pages/informe.html" class="quick-card">
+      <div class="qi">📊</div>
+      <div class="ql">Informe de Mercado</div>
+      <div class="qs">Análisis sectorial 2026</div>
+    </a>
+    <a href="pages/seo.html" class="quick-card">
+      <div class="qi">🔍</div>
+      <div class="ql">Plan SEO</div>
+      <div class="qs">Estrategia 12 meses</div>
+    </a>
+    <a href="pages/erp.html" class="quick-card">
+      <div class="qi">⚙️</div>
+      <div class="ql">ERP · Dashboard</div>
+      <div class="qs">Gestión operaciones</div>
+    </a>
+    <a href="https://gatoseguro.es" target="_blank" class="quick-card">
+      <div class="qi">🌐</div>
+      <div class="ql">Web Corporativa</div>
+      <div class="qs">Sitio público</div>
+    </a>
+  </div>
+
+  <!-- DOCUMENTOS PRINCIPALES -->
+  <div class="sh"><h2>Documentos estratégicos</h2></div>
+  <div class="cards">
+
+    <a href="pages/informe.html" class="card">
+      <div class="card-accent" style="background: linear-gradient(90deg, #C8641A, #E8924A)"></div>
+      <div class="card-body">
+        <div class="card-icon">📊</div>
+        <div class="card-tag" style="background:rgba(200,100,26,0.12);color:#C8641A">Investigación · Mercado</div>
+        <h3>Informe de Mercado</h3>
+        <p>Análisis sectorial completo del mercado de redes de protección para gatos en España. Competidores, precios, geografía, DAFO y 8 conclusiones estratégicas accionables.</p>
+        <div class="card-meta">
+          <div class="card-meta-item">📅 Junio 2026</div>
+          <div class="card-meta-item">📄 9 secciones</div>
+          <div class="card-meta-item">🔍 10 competidores</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label">Abrir informe</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="pages/seo.html" class="card">
+      <div class="card-accent" style="background: linear-gradient(90deg, #1A4D7A, #2E7DBE)"></div>
+      <div class="card-body">
+        <div class="card-icon">🔍</div>
+        <div class="card-tag" style="background:rgba(26,77,122,0.12);color:#1A4D7A">Marketing · SEO</div>
+        <h3>Plan de Posicionamiento Web</h3>
+        <p>Estrategia SEO completa a 12 meses: análisis de competencia, mapa de keywords (12 palabras clave), optimización on-page, calendario de contenidos y SEO local por ciudades.</p>
+        <div class="card-meta">
+          <div class="card-meta-item">📅 v1.0 · 2026</div>
+          <div class="card-meta-item">🗝️ 12 keywords</div>
+          <div class="card-meta-item">📍 6 ciudades</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label">Abrir plan SEO</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="pages/erp.html" class="card">
+      <div class="card-accent" style="background: linear-gradient(90deg, #2D6A4F, #3D9970)"></div>
+      <div class="card-body">
+        <div class="card-icon">⚙️</div>
+        <div class="card-tag" style="background:rgba(45,106,79,0.12);color:#2D6A4F">Operaciones · ERP</div>
+        <h3>Dashboard ERP · Gestión Integral</h3>
+        <p>Panel de control con 7 módulos: agenda de instalaciones, presupuestos, gestión de stock, CRM de clientes, gestión de instaladores y centro de automatización con 13 flujos activos.</p>
+        <div class="card-meta">
+          <div class="card-meta-item">⚡ 7 módulos</div>
+          <div class="card-meta-item">🤖 13 automatizaciones</div>
+          <div class="card-meta-item">📦 Stock en tiempo real</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label">Abrir ERP</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <div class="card" style="border-style: dashed; cursor: default; opacity: 0.6;">
+      <div class="card-accent" style="background: linear-gradient(90deg, #9E8B7A, #C4B0A0)"></div>
+      <div class="card-body">
+        <div class="card-icon">📋</div>
+        <div class="card-tag" style="background:rgba(90,74,62,0.1);color:#5C4A3A">Próximamente</div>
+        <h3>Manual de Instaladores</h3>
+        <p>Guía de procesos y protocolos para el equipo de instalación: tipos de montaje, materiales, tiempos estándar y control de calidad por tipo de instalación.</p>
+        <div class="card-meta">
+          <div class="card-meta-item">🔧 En preparación</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label" style="color:var(--light)">Disponible pronto</span>
+        <span class="card-arrow" style="color:var(--light)">○</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ESTADO DE PROYECTOS -->
+  <div class="sh"><h2>Estado de proyectos</h2></div>
+  <div style="background:var(--white);border-radius:14px;border:1px solid var(--rule);overflow:hidden;margin-bottom:3rem">
+    <table class="status-table">
+      <thead>
+        <tr>
+          <th>Proyecto</th>
+          <th>Responsable</th>
+          <th>Estado</th>
+          <th>Prioridad</th>
+          <th>Deadline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Posicionamiento SEO nacional</strong><br><span style="font-size:0.75rem;color:var(--light)">Implementación plan 12 meses</span></td>
+          <td>Marketing</td>
+          <td><span class="status-dot dot-wip"></span>En curso</td>
+          <td><span class="badge b-amber">Alta</span></td>
+          <td>Dic 2026</td>
+        </tr>
+        <tr>
+          <td><strong>Expansión Madrid · Nuevos instaladores</strong><br><span style="font-size:0.75rem;color:var(--light)">Contratación y formación equipo Madrid</span></td>
+          <td>Operaciones</td>
+          <td><span class="status-dot dot-plan"></span>Planificado</td>
+          <td><span class="badge b-amber">Alta</span></td>
+          <td>Sep 2026</td>
+        </tr>
+        <tr>
+          <td><strong>ERP · Módulo de facturación</strong><br><span style="font-size:0.75rem;color:var(--light)">Integración con Holded / Factusol</span></td>
+          <td>TI</td>
+          <td><span class="status-dot dot-plan"></span>Planificado</td>
+          <td><span class="badge b-blue">Media</span></td>
+          <td>Oct 2026</td>
+        </tr>
+        <tr>
+          <td><strong>Canal veterinario · Programa referidos</strong><br><span style="font-size:0.75rem;color:var(--light)">Acuerdos con 20 clínicas en Madrid y Barcelona</span></td>
+          <td>Ventas</td>
+          <td><span class="status-dot dot-wip"></span>En curso</td>
+          <td><span class="badge b-amber">Alta</span></td>
+          <td>Ago 2026</td>
+        </tr>
+        <tr>
+          <td><strong>Kit DIY · Tienda online</strong><br><span style="font-size:0.75rem;color:var(--light)">E-commerce para venta nacional de kits</span></td>
+          <td>Marketing</td>
+          <td><span class="status-dot dot-plan"></span>Planificado</td>
+          <td><span class="badge b-blue">Media</span></td>
+          <td>Nov 2026</td>
+        </tr>
+        <tr>
+          <td><strong>Web corporativa</strong><br><span style="font-size:0.75rem;color:var(--light)">gatoseguro.es · Publicación y SEO técnico</span></td>
+          <td>Marketing</td>
+          <td><span class="status-dot dot-live"></span>Live</td>
+          <td><span class="badge b-green">Activo</span></td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- KPIs OBJETIVO -->
+  <div class="sh"><h2>KPIs objetivo 2026</h2></div>
+  <div class="quick-grid" style="margin-bottom:0">
+    <div style="background:var(--white);border-radius:12px;padding:1.4rem;border:1px solid var(--rule);text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--amber)">3.500</div>
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--light);margin-top:4px">Visitas orgánicas/mes</div>
+      <div style="font-size:0.7rem;color:var(--light);margin-top:2px">A 12 meses</div>
+    </div>
+    <div style="background:var(--white);border-radius:12px;padding:1.4rem;border:1px solid var(--rule);text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--green)">Top 3</div>
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--light);margin-top:4px">Posición keywords locales</div>
+      <div style="font-size:0.7rem;color:var(--light);margin-top:2px">Por ciudad objetivo</div>
+    </div>
+    <div style="background:var(--white);border-radius:12px;padding:1.4rem;border:1px solid var(--rule);text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--blue)">80+</div>
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--light);margin-top:4px">Reseñas Google</div>
+      <div style="font-size:0.7rem;color:var(--light);margin-top:2px">Media ≥ 4.8★</div>
+    </div>
+    <div style="background:var(--white);border-radius:12px;padding:1.4rem;border:1px solid var(--rule);text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--amber)">4%</div>
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--light);margin-top:4px">Tasa conversión web</div>
+      <div style="font-size:0.7rem;color:var(--light);margin-top:2px">Visita → Presupuesto</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>GatoSeguro · Intranet</strong>
+  <span>Uso interno · No compartir externamente</span>
+  <span id="year"></span>
+</footer>
+
+<script>
+  const now = new Date();
+  const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('fecha').textContent = `${dias[now.getDay()]}, ${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+  document.getElementById('year').textContent = `© ${now.getFullYear()} GatoSeguro`;
+</script>
+</body>
+</html>
