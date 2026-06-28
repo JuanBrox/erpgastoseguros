@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gantt · Plan de Puesta en Marcha · Top Redes</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<style>
+:root {
+  --amber: #C8641A; --amber-l: rgba(200,100,26,0.1);
+  --dark: #1A1410; --mid: #5C4A3A; --light: #9E8B7A;
+  --cream: #FAF7F3; --white: #fff; --rule: rgba(90,74,62,0.1);
+  --blue: #2a78d6; --green: #1baf7a; --gold: #eda100;
+  --purple: #4a3aa7; --red: #e34948;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; font-size: 14px; }
+
+/* NAVBAR */
+.gs-navbar { position: sticky; top: 0; z-index: 9999; background: var(--dark); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 52px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.gs-navbar-left { display: flex; align-items: center; gap: 1.2rem; }
+.gs-back { display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.82rem; font-weight: 500; padding: 0.35rem 0.8rem; border-radius: 7px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.15s; }
+.gs-back:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.gs-logo { font-size: 0.95rem; font-weight: 700; color: #fff; }
+.gs-logo span { color: var(--amber); }
+.gs-navbar-right { display: flex; align-items: center; gap: 0.8rem; }
+.gs-web-link { display: flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.9rem; border-radius: 7px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.15s; }
+.gs-web-link:hover { background: var(--amber); color: #fff; border-color: var(--amber); }
+
+/* PAGE */
+.page-header { background: var(--dark); padding: 2.5rem 2.5rem 2rem; }
+.eyebrow { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.6rem; }
+.page-header h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 0.4rem; }
+.page-header p { color: rgba(255,255,255,0.45); font-size: 0.85rem; }
+.main { padding: 2rem 2.5rem; }
+
+/* TOOLBAR */
+.toolbar { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.toolbar-left { display: flex; gap: 0.6rem; flex: 1; align-items: center; }
+.btn { padding: 0.45rem 1rem; border-radius: 8px; border: 1px solid var(--rule); background: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; color: var(--dark); transition: all 0.15s; display: flex; align-items: center; gap: 0.4rem; }
+.btn:hover { border-color: var(--amber); color: var(--amber); }
+.btn-primary { background: var(--amber); color: #fff; border-color: var(--amber); }
+.btn-primary:hover { background: var(--dark); border-color: var(--dark); color: #fff; }
+.btn-danger { background: rgba(227,73,72,0.1); color: var(--red); border-color: rgba(227,73,72,0.3); }
+.btn-danger:hover { background: var(--red); color: #fff; }
+.weeks-ctrl { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--mid); }
+.weeks-ctrl input { width: 50px; padding: 0.35rem 0.5rem; border-radius: 6px; border: 1px solid var(--rule); font-size: 0.8rem; text-align: center; }
+
+/* LEGEND */
+.legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+.leg { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--mid); }
+.leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* GANTT TABLE */
+.gantt-wrap { background: var(--white); border-radius: 14px; border: 1px solid var(--rule); overflow: auto; }
+.gantt-grid { display: grid; min-width: 900px; }
+.gantt-grid.cols-20 { grid-template-columns: 220px 1fr; }
+
+.g-header-left { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--light); padding: 8px 10px; border-right: 1px solid var(--rule); border-bottom: 2px solid var(--dark); background: var(--white); position: sticky; left: 0; z-index: 5; }
+.g-header-right { border-bottom: 2px solid var(--dark); background: var(--white); position: sticky; top: 0; z-index: 4; }
+.month-row { display: flex; }
+.month-cell { flex: 1; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; text-align: center; padding: 4px 2px; border-right: 1px solid var(--rule); color: var(--light); white-space: nowrap; overflow: hidden; }
+.month-cell.odd { background: rgba(90,74,62,0.03); }
+
+.g-phase-left { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 7px 10px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); background: rgba(90,74,62,0.04); position: sticky; left: 0; z-index: 3; display: flex; align-items: center; gap: 6px; }
+.g-phase-right { height: 30px; border-bottom: 1px solid var(--rule); background: rgba(90,74,62,0.02); position: relative; }
+
+.g-task-left { font-size: 0.8rem; padding: 2px 10px 2px 22px; border-right: 1px solid var(--rule); border-bottom: 1px solid rgba(90,74,62,0.05); background: var(--white); position: sticky; left: 0; z-index: 3; display: flex; align-items: center; gap: 6px; min-height: 28px; }
+.g-task-left .tname { flex: 1; cursor: text; }
+.g-task-left .tname:focus { outline: 2px solid var(--amber); border-radius: 3px; }
+.g-task-right { height: 28px; border-bottom: 1px solid rgba(90,74,62,0.05); position: relative; background: var(--white); }
+.g-task-right:hover { background: rgba(200,100,26,0.03); }
+
+.bar { position: absolute; top: 50%; transform: translateY(-50%); border-radius: 4px; cursor: grab; display: flex; align-items: center; padding: 0 6px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); white-space: nowrap; overflow: hidden; user-select: none; transition: filter 0.1s; }
+.bar:active { cursor: grabbing; filter: brightness(1.1); }
+.bar.milestone-bar { border-radius: 50%; width: 12px !important; padding: 0; justify-content: center; left: calc(var(--left) - 6px) !important; top: 50%; transform: translateY(-50%); border: 2px solid var(--white); }
+.resize-handle { position: absolute; right: 0; top: 0; bottom: 0; width: 6px; cursor: ew-resize; background: rgba(255,255,255,0.3); border-radius: 0 4px 4px 0; }
+
+.today-line { position: absolute; top: 0; width: 1.5px; background: var(--red); opacity: 0.7; z-index: 10; pointer-events: none; }
+
+/* TASK ACTIONS */
+.task-del { opacity: 0; font-size: 0.7rem; color: var(--red); cursor: pointer; padding: 2px 4px; border-radius: 4px; flex-shrink: 0; transition: opacity 0.15s; }
+.g-task-left:hover .task-del { opacity: 1; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.5); z-index: 200; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--white); border-radius: 16px; width: 480px; max-width: 90vw; padding: 2rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modal h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mid); margin-bottom: 0.35rem; }
+.form-group input, .form-group select { width: 100%; padding: 0.6rem 0.8rem; border: 1.5px solid var(--rule); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--dark); }
+.form-group input:focus, .form-group select:focus { border-color: var(--amber); outline: none; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.modal-actions { display: flex; gap: 0.8rem; justify-content: flex-end; margin-top: 1.5rem; }
+.color-options { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.3rem; }
+.color-opt { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border 0.1s; }
+.color-opt.selected { border-color: var(--dark); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--dark); color: #fff; padding: 0.7rem 1.2rem; border-radius: 10px; font-size: 0.82rem; font-weight: 500; z-index: 999; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+@media (max-width: 640px) {
+  .main { padding: 1.5rem 1rem; }
+  .page-header { padding: 2rem 1rem 1.5rem; }
+  .gs-navbar { padding: 0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="gs-navbar">
+  <div class="gs-navbar-left">
+    <a href="../index.html" class="gs-back">← Volver al hub</a>
+    <span class="gs-logo">Gato<span>Seguro</span> · Intranet</span>
+  </div>
+  <div class="gs-navbar-right">
+    <span style="font-size:0.72rem;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:0.4rem"><span style="width:6px;height:6px;border-radius:50%;background:#2D6A4F;display:inline-block"></span>Live</span>
+    <a href="https://webgatoseguros.netlify.app/" target="_blank" class="gs-web-link">🌐 Ver web corporativa ↗</a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="eyebrow">Plan de proyecto · 2026</div>
+  <h1>Gantt · Puesta en marcha Top Redes</h1>
+  <p>Planificación visual editable · Haz clic en las barras para mover, arrastra el borde derecho para redimensionar.</p>
+</div>
+
+<div class="main">
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="btn btn-primary" onclick="openAddPhase()">+ Fase</button>
+      <button class="btn" onclick="openAddTask()">+ Tarea</button>
+      <div class="weeks-ctrl">
+        <span>Semanas:</span>
+        <input type="number" id="weeks-input" value="24" min="8" max="52" onchange="setWeeks(+this.value)">
+      </div>
+    </div>
+    <button class="btn" onclick="exportHTML()" title="Descargar HTML">⬇ Exportar</button>
+    <button class="btn" onclick="saveLocal()" title="Guardar en el navegador">💾 Guardar</button>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend" id="legend"></div>
+
+  <!-- GANTT -->
+  <div class="gantt-wrap">
+    <div class="gantt-grid cols-20" id="gantt"></div>
+  </div>
+
+</div>
+
+<!-- MODAL AÑADIR FASE -->
+<div class="modal-overlay" id="modal-phase">
+  <div class="modal">
+    <h3>➕ Nueva fase</h3>
+    <div class="form-group">
+      <label>Nombre de la fase</label>
+      <input type="text" id="ph-name" placeholder="Ej: Redes Sociales">
+    </div>
+    <div class="form-group">
+      <label>Color</label>
+      <div class="color-options" id="ph-colors"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-phase')">Cancelar</button>
+      <button class="btn btn-primary" onclick="addPhase()">Añadir fase</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AÑADIR TAREA -->
+<div class="modal-overlay" id="modal-task">
+  <div class="modal">
+    <h3>➕ Nueva tarea</h3>
+    <div class="form-group">
+      <label>Nombre de la tarea</label>
+      <input type="text" id="t-name" placeholder="Ej: Diseño logotipo">
+    </div>
+    <div class="form-group">
+      <label>Fase</label>
+      <select id="t-phase"></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Semana inicio</label>
+        <input type="number" id="t-start" value="1" min="1">
+      </div>
+      <div class="form-group">
+        <label>Duración (semanas)</label>
+        <input type="number" id="t-dur" value="2" min="1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Tipo</label>
+      <select id="t-type">
+        <option value="bar">Barra</option>
+        <option value="milestone">Hito (punto)</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-task')">Cancelar</button>
+      <button class="btn btn-primary" onclick="addTask()">Añadir tarea</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const COLORS = ['#2a78d6','#1baf7a','#eda100','#4a3aa7','#e34948','#e87ba4','#eb6834','#854f0b'];
+let WEEKS = 24;
+let selectedPhColor = COLORS[0];
+
+let state = {
+  phases: [
+    {
+      id:'web', label:'Web & dominio', color:'#2a78d6',
+      tasks:[
+        {id:'w1', label:'Contratar topredes.es', w:1, d:1},
+        {id:'w2', label:'Diseño y contenidos web', w:1, d:3},
+        {id:'w3', label:'Desarrollo web (topredes.es)', w:2, d:4},
+        {id:'w4', label:'SEO técnico inicial', w:4, d:2},
+        {id:'w5', label:'Publicar web + WhatsApp', w:5, d:1, milestone:true},
+        {id:'w6', label:'Gestión recuperación dominio antiguo', w:1, d:16, faded:true},
+      ]
+    },
+    {
+      id:'mkt', label:'Marketing & SEO', color:'#1baf7a',
+      tasks:[
+        {id:'m1', label:'Keyword research Valencia', w:3, d:2},
+        {id:'m2', label:'Google Business Profile', w:4, d:2},
+        {id:'m3', label:'Blog: 2 artículos/mes Valencia', w:5, d:20},
+        {id:'m4', label:'Campaña Google Ads Valencia', w:5, d:8},
+        {id:'m5', label:'Canal veterinarios (referidos)', w:6, d:6},
+        {id:'m6', label:'Reviews Google (objetivo 30+)', w:6, d:10},
+        {id:'m7', label:'Primer top-3 Valencia', w:12, d:1, milestone:true},
+      ]
+    },
+    {
+      id:'app', label:'Herramientas & app', color:'#eda100',
+      tasks:[
+        {id:'a1', label:'Definir parámetros presupuesto', w:2, d:2},
+        {id:'a2', label:'App calculadora presupuestos', w:3, d:4},
+        {id:'a3', label:'Plantilla parte de trabajo', w:4, d:2},
+        {id:'a4', label:'Integración WhatsApp → presupuesto', w:5, d:3},
+        {id:'a5', label:'App operativa', w:7, d:1, milestone:true},
+        {id:'a6', label:'Sistema facturación + cobros', w:7, d:5},
+        {id:'a7', label:'ERP agenda/técnicos/stock', w:8, d:4},
+      ]
+    },
+    {
+      id:'ops', label:'Operaciones', color:'#4a3aa7',
+      tasks:[
+        {id:'o1', label:'Definir proceso completo (flujo)', w:1, d:2},
+        {id:'o2', label:'Ficha técnicos Valencia', w:2, d:2},
+        {id:'o3', label:'Parte de trabajo digital', w:4, d:3},
+        {id:'o4', label:'Protocolo presupuesto < 2h', w:5, d:2},
+        {id:'o5', label:'Proceso factura + cobro activo', w:8, d:1, milestone:true},
+        {id:'o6', label:'Revisión procesos y KPIs mensual', w:9, d:16, faded:true},
+      ]
+    },
+    {
+      id:'exp', label:'Expansión Madrid & BCN', color:'#e34948',
+      tasks:[
+        {id:'e1', label:'Análisis mercado Madrid', w:13, d:3},
+        {id:'e2', label:'SEO Madrid (páginas de ciudad)', w:14, d:8},
+        {id:'e3', label:'Técnicos Madrid (captación)', w:15, d:4},
+        {id:'e4', label:'Campaña Google Ads Madrid', w:17, d:7},
+        {id:'e5', label:'Arranque operativo Madrid', w:19, d:1, milestone:true},
+        {id:'e6', label:'SEO Barcelona (páginas ciudad)', w:20, d:5},
+      ]
+    },
+  ]
+};
+
+function loadState() {
+  const saved = localStorage.getItem('topredes_gantt');
+  if (saved) { try { state = JSON.parse(saved); } catch(e){} }
+}
+
+function saveLocal() {
+  localStorage.setItem('topredes_gantt', JSON.stringify(state));
+  showToast('💾 Guardado en el navegador');
+}
+
+function setWeeks(n) {
+  WEEKS = Math.max(8, Math.min(52, n));
+  document.getElementById('weeks-input').value = WEEKS;
+  render();
+}
+
+// ---- RENDER ----
+function render() {
+  renderLegend();
+  renderGantt();
+}
+
+function renderLegend() {
+  const leg = document.getElementById('legend');
+  leg.innerHTML = state.phases.map(ph =>
+    `<div class="leg"><div class="leg-dot" style="background:${ph.color}"></div>${ph.label}</div>`
+  ).join('') + `<div class="leg"><div class="leg-dot" style="border-radius:50%;background:#e34948"></div>Hito</div>`;
+}
+
+function renderGantt() {
+  const g = document.getElementById('gantt');
+  g.innerHTML = '';
+
+  // Header row
+  const hLeft = document.createElement('div');
+  hLeft.className = 'g-header-left';
+  hLeft.textContent = 'TAREA';
+  g.appendChild(hLeft);
+
+  const hRight = document.createElement('div');
+  hRight.className = 'g-header-right';
+  const mRow = document.createElement('div');
+  mRow.className = 'month-row';
+  const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  for (let w = 0; w < WEEKS; w++) {
+    const c = document.createElement('div');
+    c.className = 'month-cell' + (w%2===0?' odd':'');
+    const startDate = new Date(2026, 0, 5 + w*7);
+    c.textContent = w===0 ? 'S1' : (startDate.getDate()===1 || startDate.getDate()<=7 && w>0 && new Date(2026,0,5+(w-1)*7).getMonth()!==startDate.getMonth()) ? monthNames[startDate.getMonth()] : '';
+    if(w%2===0 && c.textContent==='') c.textContent = 'S'+(w+1);
+    c.title = 'Sem '+(w+1);
+    mRow.appendChild(c);
+  }
+  hRight.appendChild(mRow);
+  g.appendChild(hRight);
+
+  state.phases.forEach((ph, pi) => {
+    // Phase row
+    const pLeft = document.createElement('div');
+    pLeft.className = 'g-phase-left';
+    pLeft.style.color = ph.color;
+    pLeft.innerHTML = `<span style="width:8px;height:8px;border-radius:2px;background:${ph.color};display:inline-block;flex-shrink:0"></span>${ph.label}`;
+    g.appendChild(pLeft);
+
+    const pRight = document.createElement('div');
+    pRight.className = 'g-phase-right';
+    const allBars = ph.tasks.filter(t=>!t.milestone);
+    if(allBars.length) {
+      const minW = Math.min(...allBars.map(t=>t.w));
+      const maxW = Math.max(...allBars.map(t=>t.w+t.d-1));
+      const span = document.createElement('div');
+      span.style.cssText = `position:absolute;top:50%;transform:translateY(-50%);height:6px;border-radius:3px;background:${ph.color}22;border:1px solid ${ph.color}44;left:${((minW-1)/WEEKS)*100}%;width:${((maxW-minW+1)/WEEKS)*100}%`;
+      pRight.appendChild(span);
+    }
+    g.appendChild(pRight);
+
+    ph.tasks.forEach((task, ti) => {
+      const tLeft = document.createElement('div');
+      tLeft.className = 'g-task-left';
+      const nameEl = document.createElement('span');
+      nameEl.className = 'tname';
+      nameEl.contentEditable = true;
+      nameEl.textContent = task.label;
+      nameEl.title = 'Haz clic para editar';
+      nameEl.onblur = () => {
+        task.label = nameEl.textContent.trim() || task.label;
+        saveLocal();
+      };
+      nameEl.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); nameEl.blur(); }};
+
+      const delBtn = document.createElement('span');
+      delBtn.className = 'task-del';
+      delBtn.textContent = '✕';
+      delBtn.title = 'Eliminar tarea';
+      delBtn.onclick = () => {
+        if(confirm(`¿Eliminar "${task.label}"?`)) {
+          ph.tasks.splice(ti, 1);
+          saveLocal(); render();
+        }
+      };
+      if(task.milestone) {
+        const badge = document.createElement('span');
+        badge.style.cssText = `font-size:10px;background:${ph.color}22;color:${ph.color};padding:1px 5px;border-radius:4px;flex-shrink:0`;
+        badge.textContent = 'Hito';
+        tLeft.appendChild(badge);
+      }
+      tLeft.appendChild(nameEl);
+      tLeft.appendChild(delBtn);
+      g.appendChild(tLeft);
+
+      const tRight = document.createElement('div');
+      tRight.className = 'g-task-right';
+
+      if (task.milestone) {
+        const dot = document.createElement('div');
+        dot.style.cssText = `position:absolute;top:50%;left:calc(${((task.w-0.5)/WEEKS)*100}%);transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:${ph.color};border:2px solid white;z-index:2;cursor:pointer`;
+        dot.title = `Hito: S${task.w}`;
+        makeDraggable(dot, task, tRight, ph.color, true);
+        tRight.appendChild(dot);
+      } else {
+        const bar = document.createElement('div');
+        const pct = 100/WEEKS;
+        bar.className = 'bar';
+        const alpha = task.faded ? '55' : 'ee';
+        bar.style.cssText = `left:${(task.w-1)*pct}%;width:${task.d*pct}%;background:${ph.color}${alpha};height:16px`;
+        bar.title = `${task.label} · S${task.w}–S${task.w+task.d-1} (${task.d}sem)`;
+
+        const resizeH = document.createElement('div');
+        resizeH.className = 'resize-handle';
+        bar.appendChild(resizeH);
+
+        makeDraggable(bar, task, tRight, ph.color, false, resizeH);
+        tRight.appendChild(bar);
+      }
+      g.appendChild(tRight);
+    });
+  });
+}
+
+function makeDraggable(el, task, container, color, isMilestone, resizeHandle) {
+  let dragging = false, resizing = false, startX = 0, startW = 0, startLeft = 0;
+
+  function pxToWeeks(px) { return Math.max(1, Math.round(px / (container.offsetWidth / WEEKS))); }
+
+  el.addEventListener('mousedown', e => {
+    if (resizeHandle && resizeHandle.contains(e.target)) {
+      resizing = true; startX = e.clientX; startW = task.d;
+    } else {
+      dragging = true; startX = e.clientX; startLeft = task.w;
+    }
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging && !resizing) return;
+    const dx = e.clientX - startX;
+    const ww = container.offsetWidth / WEEKS;
+    if (resizing) {
+      const newD = Math.max(1, Math.min(WEEKS, startW + Math.round(dx/ww)));
+      task.d = newD;
+    } else {
+      const newW = Math.max(1, Math.min(WEEKS - (isMilestone ? 0 : task.d - 1), startLeft + Math.round(dx/ww)));
+      task.w = newW;
+    }
+    render();
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (dragging || resizing) { dragging = false; resizing = false; saveLocal(); }
+  });
+}
+
+// ---- MODALS ----
+function openAddPhase() {
+  const cc = document.getElementById('ph-colors');
+  cc.innerHTML = COLORS.map(c =>
+    `<div class="color-opt${c===selectedPhColor?' selected':''}" style="background:${c}" onclick="selectColor('${c}',this)"></div>`
+  ).join('');
+  document.getElementById('ph-name').value = '';
+  document.getElementById('modal-phase').classList.add('open');
+  setTimeout(()=>document.getElementById('ph-name').focus(), 100);
+}
+
+function selectColor(c, el) {
+  selectedPhColor = c;
+  document.querySelectorAll('#ph-colors .color-opt').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function addPhase() {
+  const name = document.getElementById('ph-name').value.trim();
+  if (!name) return;
+  const id = 'ph_'+Date.now();
+  state.phases.push({ id, label: name, color: selectedPhColor, tasks: [] });
+  closeModal('modal-phase');
+  saveLocal(); render();
+  showToast('✓ Fase añadida');
+}
+
+function openAddTask() {
+  const sel = document.getElementById('t-phase');
+  sel.innerHTML = state.phases.map(ph=>`<option value="${ph.id}">${ph.label}</option>`).join('');
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-start').value = 1;
+  document.getElementById('t-dur').value = 2;
+  document.getElementById('t-type').value = 'bar';
+  document.getElementById('modal-task').classList.add('open');
+  setTimeout(()=>document.getElementById('t-name').focus(), 100);
+}
+
+function addTask() {
+  const name = document.getElementById('t-name').value.trim();
+  const phId = document.getElementById('t-phase').value;
+  const w = Math.max(1, +document.getElementById('t-start').value);
+  const d = Math.max(1, +document.getElementById('t-dur').value);
+  const isMilestone = document.getElementById('t-type').value === 'milestone';
+  if (!name) return;
+  const ph = state.phases.find(p=>p.id===phId);
+  if (!ph) return;
+  ph.tasks.push({ id: 't'+Date.now(), label: name, w, d: isMilestone?1:d, milestone: isMilestone||undefined });
+  closeModal('modal-task');
+  saveLocal(); render();
+  showToast('✓ Tarea añadida');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+
+// ---- EXPORT ----
+function exportHTML() {
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Gantt Top Redes</title></head><body><p style="font-family:sans-serif;padding:2rem">Exportación de datos Gantt:<br><pre>${JSON.stringify(state,null,2)}</pre></body></html>`;
+  const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'gantt-topredes.html';
+  a.click();
+  showToast('⬇ Descargando...');
+}
+
+// ---- TOAST ----
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// INIT
+loadState();
+render();
+</script>
+</body>
+</html>
