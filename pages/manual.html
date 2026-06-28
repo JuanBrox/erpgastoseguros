@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Instaladores · Top Redes</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<style>
+:root {
+  --amber:#C8641A; --amber-l:rgba(200,100,26,0.1); --amber-d:#9E4A0E;
+  --dark:#1A1410; --mid:#5C4A3A; --light:#9E8B7A;
+  --cream:#FAF7F3; --white:#fff; --rule:rgba(90,74,62,0.1);
+  --green:#2D6A4F; --green-l:rgba(45,106,79,0.1);
+  --red:#B83232; --red-l:rgba(184,50,50,0.1);
+  --blue:#1A4D7A; --blue-l:rgba(26,77,122,0.1);
+  --gold:#9B7A00; --gold-l:rgba(155,122,0,0.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);line-height:1.6}
+
+/* NAVBAR */
+.gs-navbar{position:sticky;top:0;z-index:9999;background:var(--dark);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.gs-navbar-left{display:flex;align-items:center;gap:1.2rem}
+.gs-back{display:flex;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.82rem;font-weight:500;padding:0.35rem 0.8rem;border-radius:7px;border:1px solid rgba(255,255,255,0.1);transition:all 0.15s}
+.gs-back:hover{background:rgba(255,255,255,0.07);color:#fff}
+.gs-logo{font-size:0.95rem;font-weight:700;color:#fff}
+.gs-logo span{color:var(--amber)}
+.gs-navbar-right{display:flex;align-items:center;gap:0.8rem}
+.gs-web-link{display:flex;align-items:center;gap:0.4rem;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.78rem;font-weight:500;padding:0.35rem 0.9rem;border-radius:7px;border:1px solid rgba(255,255,255,0.1);transition:all 0.15s}
+.gs-web-link:hover{background:var(--amber);color:#fff;border-color:var(--amber)}
+
+/* LAYOUT */
+.page-wrap{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 52px)}
+
+/* SIDEBAR NAV */
+.doc-sidebar{background:var(--white);border-right:1px solid var(--rule);padding:2rem 0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto}
+.sidebar-section{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;color:var(--light);padding:0.8rem 1.5rem 0.4rem}
+.sidebar-link{display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1.5rem;font-size:0.83rem;color:var(--mid);text-decoration:none;transition:all 0.15s;border-left:3px solid transparent}
+.sidebar-link:hover{background:var(--amber-l);color:var(--amber)}
+.sidebar-link.active{background:var(--amber-l);color:var(--amber);border-left-color:var(--amber);font-weight:500}
+.sidebar-link .num{font-size:0.7rem;background:var(--rule);color:var(--light);padding:1px 5px;border-radius:4px;flex-shrink:0}
+
+/* CONTENT */
+.doc-content{padding:3rem 4rem;max-width:860px}
+
+/* HERO */
+.doc-hero{background:var(--dark);margin:-3rem -4rem 3rem;padding:3rem 4rem 2.5rem}
+.doc-eyebrow{font-size:0.68rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--amber);margin-bottom:0.8rem}
+.doc-hero h1{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:#fff;margin-bottom:0.5rem;line-height:1.1}
+.doc-hero p{color:rgba(255,255,255,0.45);font-size:0.9rem;max-width:560px}
+.doc-meta{display:flex;gap:2rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08)}
+.doc-meta-item span{display:block}
+.doc-meta-item .ml{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.3)}
+.doc-meta-item .mv{font-size:0.85rem;color:rgba(255,255,255,0.7);font-weight:500}
+
+/* SECTION */
+.section{margin-bottom:3.5rem;scroll-margin-top:80px}
+.section-eyebrow{font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.8rem}
+.section-eyebrow::after{content:'';flex:1;height:1px;background:var(--amber);opacity:0.25}
+h2{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--dark);margin-bottom:0.8rem;line-height:1.15}
+h3{font-size:1rem;font-weight:600;color:var(--dark);margin-bottom:0.6rem;margin-top:1.5rem}
+p{color:var(--mid);line-height:1.8;margin-bottom:1rem;font-size:0.9rem}
+p:last-child{margin-bottom:0}
+
+/* CARDS GRID */
+.cards-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+.card{background:var(--white);border-radius:12px;padding:1.4rem;border:1px solid var(--rule)}
+.card-icon{font-size:1.6rem;margin-bottom:0.7rem}
+.card h4{font-weight:600;font-size:0.9rem;margin-bottom:0.4rem}
+.card p{font-size:0.82rem;margin:0}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;margin:1.5rem 0;border-radius:12px;border:1px solid var(--rule)}
+table{width:100%;border-collapse:collapse}
+th{padding:0.7rem 1rem;text-align:left;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--light);background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.1)}
+th:first-child{border-radius:12px 0 0 0}
+th:last-child{border-radius:0 12px 0 0}
+td{padding:0.75rem 1rem;border-bottom:1px solid var(--rule);font-size:0.85rem;color:var(--mid);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--amber-l)}
+td strong{color:var(--dark)}
+
+/* BADGE */
+.badge{display:inline-block;padding:0.18rem 0.65rem;border-radius:50px;font-size:0.7rem;font-weight:700}
+.b-green{background:var(--green-l);color:var(--green)}
+.b-amber{background:var(--amber-l);color:var(--amber-d)}
+.b-red{background:var(--red-l);color:var(--red)}
+.b-blue{background:var(--blue-l);color:var(--blue)}
+.b-gold{background:var(--gold-l);color:var(--gold)}
+.b-gray{background:var(--rule);color:var(--mid)}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:0;margin:1.5rem 0}
+.step{display:grid;grid-template-columns:44px 1fr;gap:1.2rem;padding-bottom:1.5rem;position:relative}
+.step::before{content:'';position:absolute;left:21px;top:44px;bottom:0;width:1px;background:var(--rule)}
+.step:last-child::before{display:none}
+.step-num{width:44px;height:44px;border-radius:50%;background:var(--amber);color:#fff;font-weight:700;font-size:0.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1}
+.step-body h4{font-weight:600;font-size:0.92rem;margin-bottom:0.35rem;padding-top:10px}
+.step-body p{font-size:0.84rem;margin:0}
+
+/* CHECKLIST */
+.checklist{list-style:none;display:flex;flex-direction:column;gap:0.5rem;margin:1rem 0}
+.checklist li{display:flex;gap:0.7rem;font-size:0.85rem;color:var(--mid);align-items:flex-start;padding:0.5rem 0.8rem;background:var(--white);border-radius:8px;border:1px solid var(--rule)}
+.checklist li::before{content:'☐';color:var(--amber);font-size:1rem;flex-shrink:0;margin-top:0.05rem}
+.checklist li.done::before{content:'☑';color:var(--green)}
+
+/* ALERT */
+.alert{border-radius:10px;padding:1rem 1.2rem;margin:1.2rem 0;border-left:3px solid}
+.alert-amber{background:var(--amber-l);border-color:var(--amber)}
+.alert-green{background:var(--green-l);border-color:var(--green)}
+.alert-red{background:var(--red-l);border-color:var(--red)}
+.alert-title{font-weight:600;font-size:0.82rem;margin-bottom:0.3rem}
+.alert-amber .alert-title{color:var(--amber-d)}
+.alert-green .alert-title{color:var(--green)}
+.alert-red .alert-title{color:var(--red)}
+.alert p{font-size:0.82rem;margin:0}
+
+/* TIEMPO CARD */
+.tiempo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin:1.2rem 0}
+.tiempo-card{background:var(--white);border-radius:10px;padding:1rem;border:1px solid var(--rule);text-align:center}
+.tiempo-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--amber);line-height:1}
+.tiempo-label{font-size:0.72rem;color:var(--light);margin-top:0.3rem;text-transform:uppercase;letter-spacing:0.08em}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--rule);margin:2.5rem 0}
+
+@media(max-width:900px){
+  .page-wrap{grid-template-columns:1fr}
+  .doc-sidebar{display:none}
+  .doc-content{padding:2rem 1.5rem}
+  .doc-hero{margin:-2rem -1.5rem 2rem;padding:2rem 1.5rem 1.5rem}
+  .cards-2,.cards-3,.tiempo-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="gs-navbar">
+  <div class="gs-navbar-left">
+    <a href="../index.html" class="gs-back">← Volver al hub</a>
+    <span class="gs-logo">Top<span>Redes</span> · Intranet</span>
+  </div>
+  <div class="gs-navbar-right">
+    <span style="font-size:0.72rem;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:0.4rem"><span style="width:6px;height:6px;border-radius:50%;background:#2D6A4F;display:inline-block"></span>Live</span>
+    <a href="https://webtopredes.netlify.app/" target="_blank" class="gs-web-link">🌐 Ver web corporativa ↗</a>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- SIDEBAR -->
+  <nav class="doc-sidebar">
+    <div class="sidebar-section">Contenido</div>
+    <a href="#intro" class="sidebar-link active">📋 Introducción</a>
+    <a href="#materiales" class="sidebar-link">📦 Materiales y herramientas</a>
+    <a href="#tipos" class="sidebar-link">🔧 Tipos de instalación</a>
+    <a href="#proceso" class="sidebar-link">⚙️ Proceso paso a paso</a>
+    <a href="#tiempos" class="sidebar-link">⏱ Tiempos estándar</a>
+    <a href="#calidad" class="sidebar-link">✅ Control de calidad</a>
+    <a href="#parte" class="sidebar-link">📄 Parte de trabajo</a>
+    <a href="#incidencias" class="sidebar-link">⚠️ Incidencias</a>
+    <a href="#tarifas" class="sidebar-link">💶 Tarifas de referencia</a>
+    <a href="#contacto" class="sidebar-link">📞 Contactos clave</a>
+    <div class="sidebar-section" style="margin-top:1.5rem">Versión</div>
+    <div style="padding:0 1.5rem;font-size:0.75rem;color:var(--light)">v1.0 · Junio 2026<br>Uso exclusivo instaladores</div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="doc-content">
+
+    <!-- HERO -->
+    <div class="doc-hero">
+      <div class="doc-eyebrow">Manual interno · Uso exclusivo del equipo técnico</div>
+      <h1>Manual de Instaladores</h1>
+      <p>Guía completa de procesos, materiales y estándares de calidad para el equipo técnico de Top Redes. Lectura obligatoria antes de la primera instalación.</p>
+      <div class="doc-meta">
+        <div class="doc-meta-item"><span class="ml">Versión</span><span class="mv">1.0 · Junio 2026</span></div>
+        <div class="doc-meta-item"><span class="ml">Ámbito</span><span class="mv">Valencia · En expansión</span></div>
+        <div class="doc-meta-item"><span class="ml">Secciones</span><span class="mv">10 módulos</span></div>
+        <div class="doc-meta-item"><span class="ml">Actualizado</span><span class="mv">Jun 2026</span></div>
+      </div>
+    </div>
+
+    <!-- 1. INTRODUCCIÓN -->
+    <div class="section" id="intro">
+      <div class="section-eyebrow">01 · Introducción</div>
+      <h2>Bienvenido al equipo</h2>
+      <p>Top Redes es una empresa especializada en la <strong>instalación profesional de redes de protección para gatos</strong> en balcones, ventanas y terrazas. Nuestro principal valor diferencial es la <strong>calidad del montaje, la discreción estética y la atención al cliente</strong>.</p>
+      <p>Como instalador eres la cara de la empresa en casa del cliente. La impresión que dejas —puntualidad, limpieza, trato— es tan importante como la calidad técnica del trabajo. Un cliente satisfecho genera recomendaciones; un cliente con mala experiencia lo difunde.</p>
+
+      <div class="cards-3" style="margin-top:1.8rem">
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <h4>Nuestra promesa</h4>
+          <p>Presupuesto en &lt;2h, instalación limpia y discreta, garantía de 2 años en materiales y mano de obra.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⭐</div>
+          <h4>Estándar de calidad</h4>
+          <p>Objetivo de valoración media Google ≥ 4.8★. Tu trabajo influye directamente en este número.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📞</div>
+          <h4>Comunicación</h4>
+          <p>Cualquier duda antes o durante la instalación: llama al coordinador. No improvises en decisiones que afecten al cliente.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 2. MATERIALES -->
+    <div class="section" id="materiales">
+      <div class="section-eyebrow">02 · Materiales y herramientas</div>
+      <h2>Kit estándar de instalación</h2>
+      <p>Antes de cada salida comprueba que llevas el material completo. Un olvido implica volver, retrasar al cliente y coste extra de desplazamiento.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Material</th><th>Especificación</th><th>Uso</th><th>Stock mínimo por salida</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Red monofilamento</strong></td><td>Nylon 1,2mm transparente / negro / blanco</td><td>Todos los tipos</td><td>20m extra sobre medida</td></tr>
+            <tr><td><strong>Perfil aluminio</strong></td><td>Lacado RAL a medida · 20×20mm</td><td>Ventanas y balcones</td><td>Según pedido + 10%</td></tr>
+            <tr><td><strong>Cable acero inox.</strong></td><td>5mm · 7×7 hilos</td><td>Terrazas y perimetrales</td><td>10m extra</td></tr>
+            <tr><td><strong>Tensacables</strong></td><td>M5 inox.</td><td>Tensado perimetral</td><td>8 uds</td></tr>
+            <tr><td><strong>Ganchos poliamida</strong></td><td>Negro o blanco · paso 15cm</td><td>Fijación red a cable</td><td>50 uds</td></tr>
+            <tr><td><strong>Tornillos inox.</strong></td><td>M6 × 40 + tacos Fischer SX8</td><td>Fijación perfil a pared</td><td>20 juegos</td></tr>
+            <tr><td><strong>Bridas de nylon</strong></td><td>2,5mm × 200mm · negras</td><td>Remates y ajustes</td><td>30 uds</td></tr>
+            <tr><td><strong>Silicona neutra</strong></td><td>Transparente · cartucho 310ml</td><td>Sellado perfiles</td><td>1 cartucho</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Herramientas obligatorias</h3>
+      <div class="cards-2">
+        <div class="card">
+          <h4>🔩 Eléctricas</h4>
+          <ul style="font-size:0.84rem;color:var(--mid);padding-left:1.2rem;line-height:2">
+            <li>Taladro percutor con baterías de repuesto</li>
+            <li>Atornillador inalámbrico</li>
+            <li>Amoladora + disco corte aluminio</li>
+            <li>Pistola silicona</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>🔧 Manuales</h4>
+          <ul style="font-size:0.84rem;color:var(--mid);padding-left:1.2rem;line-height:2">
+            <li>Metro y nivel de burbuja</li>
+            <li>Alicates pelacables y tensores</li>
+            <li>Cortador de red + tijeras</li>
+            <li>Llave Allen y llaves fijas M5/M6</li>
+            <li>Escalera de aluminio (3 tramos)</li>
+            <li>Cinta de pintor y lona de protección suelo</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-amber">
+        <div class="alert-title">⚠️ EPI obligatorio</div>
+        <p>En trabajos en altura (balcones, terrazas) es obligatorio el uso de arnés homologado, casco y guantes. No se puede empezar el trabajo sin EPI completo.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 3. TIPOS DE INSTALACIÓN -->
+    <div class="section" id="tipos">
+      <div class="section-eyebrow">03 · Tipos de instalación</div>
+      <h2>Modalidades y características</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Tipo</th><th>Descripción</th><th>Dificultad</th><th>Tiempo medio</th><th>Materiales clave</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ventana batiente</strong></td>
+              <td>Marco de aluminio fijado al cerco de la ventana. La ventana puede abrirse con la red puesta.</td>
+              <td><span class="badge b-green">Básico</span></td>
+              <td>45–90 min</td>
+              <td>Perfil aluminio, red mono, tornillos</td>
+            </tr>
+            <tr>
+              <td><strong>Ventana corredera</strong></td>
+              <td>Sistema de rieles. La red sigue la apertura de la ventana sin necesidad de retirarla.</td>
+              <td><span class="badge b-amber">Medio</span></td>
+              <td>60–120 min</td>
+              <td>Perfil riel, red mono, guías</td>
+            </tr>
+            <tr>
+              <td><strong>Balcón estándar</strong></td>
+              <td>Cerramiento vertical con cable perimetral y red. Fijación a forjado y barandilla.</td>
+              <td><span class="badge b-amber">Medio</span></td>
+              <td>90–150 min</td>
+              <td>Cable acero, tensacables, red, ganchos</td>
+            </tr>
+            <tr>
+              <td><strong>Terraza grande</strong></td>
+              <td>Perímetro completo con estructura de cable. Puede incluir techo si hay losa.</td>
+              <td><span class="badge b-red">Avanzado</span></td>
+              <td>3–6 horas</td>
+              <td>Cable, tensacables extra, red HDPE, anclajes</td>
+            </tr>
+            <tr>
+              <td><strong>Catio / espacio exterior</strong></td>
+              <td>Estructura independiente o adosada para acceso controlado al exterior.</td>
+              <td><span class="badge b-red">Avanzado</span></td>
+              <td>4–8 horas</td>
+              <td>Estructura tubular, red galvanizada, puerta</td>
+            </tr>
+            <tr>
+              <td><strong>Sin taladro (alquiler)</strong></td>
+              <td>Sistema de presión o velcro estructural. Sin perforación en paredes ni marcos.</td>
+              <td><span class="badge b-green">Básico</span></td>
+              <td>30–60 min</td>
+              <td>Kit adhesivo, tensores sin taco, red ligera</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-green">
+        <div class="alert-title">✓ Norma de color</div>
+        <p>El perfil de aluminio siempre se solicita lacado en el color RAL más cercano al cerco o barandilla del cliente. Nunca instales perfil de color diferente al pactado sin confirmación del coordinador.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 4. PROCESO -->
+    <div class="section" id="proceso">
+      <div class="section-eyebrow">04 · Proceso paso a paso</div>
+      <h2>Protocolo de cada instalación</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Confirmación y preparación (día anterior)</h4>
+            <p>Revisa el parte de trabajo en la app. Confirma dirección, tipo de instalación, materiales necesarios y acceso (portero, ascensor, piso). Carga el vehículo con el material exacto + 10% de margen. Llama al cliente si hay alguna duda de acceso.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Llegada y presentación</h4>
+            <p>Llega puntual (margen máximo 10 min de retraso; si se supera, avisa al cliente y al coordinador). Identifícate con el uniforme o la camiseta de empresa. Saluda y explica brevemente qué vas a hacer y cuánto tiempo calculás.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Verificación de medidas in situ</h4>
+            <p>Antes de empezar, toma las medidas reales del espacio. Compara con las del pedido. Si hay discrepancias &gt;2cm llama al coordinador antes de cortar ningún material. Es normal que las medidas tomadas en visita o por fotos no sean exactas.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Protección del entorno</h4>
+            <p>Coloca la lona en el suelo bajo la zona de trabajo. Retira o cubre muebles cercanos. Cierra las puertas interiores para que el gato no acceda a la zona de trabajo (riesgo de escape o accidente).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>Instalación</h4>
+            <p>Sigue el procedimiento específico del tipo de instalación (ver sección 3). Trabaja con orden: primero los anclajes estructurales, luego el cable o perfil perimetral, finalmente la red y los remates. No dejes herramientas encima de la barandilla.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <h4>Verificación y pruebas</h4>
+            <p>Comprueba la tensión de la red en varios puntos: no debe ceder más de 5cm ante una presión firme con la palma. Revisa todos los anclajes. Abre y cierra la ventana si el sistema lo permite. Haz la foto de control (ver sección 6).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-body">
+            <h4>Limpieza y recogida</h4>
+            <p>Recoge todos los recortes de red, virutas de taladro y material sobrante. Limpia el polvo de la zona de trabajo. Retira la lona. El espacio debe quedar igual o mejor de como lo encontraste.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">8</div>
+          <div class="step-body">
+            <h4>Firma del parte y cierre</h4>
+            <p>Muestra el trabajo terminado al cliente. Explica el funcionamiento y el mantenimiento básico. Entrega el parte de trabajo para que lo firme (en papel o en la app). Informa de la garantía de 2 años. Sube las fotos a la app antes de salir del edificio.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 5. TIEMPOS -->
+    <div class="section" id="tiempos">
+      <div class="section-eyebrow">05 · Tiempos estándar</div>
+      <h2>Estimaciones de duración</h2>
+      <p>Los tiempos incluyen llegada, instalación, verificación, limpieza y firma del parte. No incluyen desplazamiento.</p>
+
+      <div class="tiempo-grid">
+        <div class="tiempo-card">
+          <div class="tiempo-val">45'</div>
+          <div class="tiempo-label">Ventana batiente (1 hoja)</div>
+        </div>
+        <div class="tiempo-card">
+          <div class="tiempo-val">90'</div>
+          <div class="tiempo-label">Ventana corredera o 2 hojas</div>
+        </div>
+        <div class="tiempo-card">
+          <div class="tiempo-val">2h</div>
+          <div class="tiempo-label">Balcón estándar (≤6m²)</div>
+        </div>
+        <div class="tiempo-card">
+          <div class="tiempo-val">4h</div>
+          <div class="tiempo-label">Terraza mediana (6–15m²)</div>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:1.5rem">
+        <table>
+          <thead><tr><th>Situación</th><th>Tiempo extra estimado</th><th>Acción</th></tr></thead>
+          <tbody>
+            <tr><td>Pared de hormigón armado</td><td>+20–30 min</td><td>Broca SDS, velocidad baja</td></tr>
+            <tr><td>Barandilla sin anclaje disponible</td><td>+30 min</td><td>Abrazaderas inox. o taladro en barandilla</td></tr>
+            <tr><td>Más de 3 tramos de ventana</td><td>+45 min por tramo extra</td><td>Planificar el corte de perfil previamente</td></tr>
+            <tr><td>Piso sin ascensor (≥3º)</td><td>+15 min</td><td>Dos viajes con material</td></tr>
+            <tr><td>Medidas no coinciden con pedido</td><td>+20–60 min</td><td>Llamar al coordinador antes de actuar</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-amber">
+        <div class="alert-title">⏱ Regla de las 2 instalaciones</div>
+        <p>No planifiques más de 2 instalaciones de nivel Avanzado en el mismo día, o 4 instalaciones de nivel Básico/Medio. La precipitación es la principal causa de errores y reclamaciones.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 6. CALIDAD -->
+    <div class="section" id="calidad">
+      <div class="section-eyebrow">06 · Control de calidad</div>
+      <h2>Lista de verificación antes de firmar</h2>
+      <p>Antes de pedir la firma al cliente, repasa esta lista mentalmente. Si algo no está bien, corrígelo ahora — es mucho más fácil que una visita de garantía.</p>
+
+      <ul class="checklist">
+        <li>La red cubre todo el hueco sin espacios laterales &gt;1cm</li>
+        <li>La red no cede más de 5cm ante presión firme con la palma</li>
+        <li>Todos los anclajes están apretados (no giran con la mano)</li>
+        <li>El perfil está nivelado (comprobado con nivel de burbuja)</li>
+        <li>La silicona está aplicada en todos los encuentros perfil-pared</li>
+        <li>El color del perfil coincide con lo acordado en el presupuesto</li>
+        <li>La ventana / balconera abre y cierra con normalidad</li>
+        <li>No hay recortes de red, virutas ni material sobrante en la zona</li>
+        <li>El suelo y mobiliario están limpios de polvo de taladro</li>
+        <li>Fotos subidas a la app (mínimo 3: general, detalle anclaje, red tensada)</li>
+      </ul>
+
+      <h3>Fotos obligatorias en cada instalación</h3>
+      <div class="cards-3">
+        <div class="card">
+          <div class="card-icon">📸</div>
+          <h4>Foto 1 · General</h4>
+          <p>Plano general de la instalación terminada. El espacio completo visible. Sin personas en primer plano.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h4>Foto 2 · Detalle anclaje</h4>
+          <p>Primer plano de al menos un anclaje al muro o barandilla, mostrando tornillo, taco y perfil.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <h4>Foto 3 · Tensado red</h4>
+          <p>La red tensada y el gato del cliente (si está presente y el dueño lo permite). Humaniza el trabajo.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 7. PARTE DE TRABAJO -->
+    <div class="section" id="parte">
+      <div class="section-eyebrow">07 · Parte de trabajo</div>
+      <h2>Documento que firma el cliente</h2>
+      <p>El parte de trabajo es el documento legal que cierra la instalación. Sin firma del cliente no se considera trabajo completado y no genera factura.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo</th><th>Quién lo rellena</th><th>Obligatorio</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Nº de pedido</strong></td><td>Viene pre-rellenado desde la app</td><td><span class="badge b-green">Sí</span></td></tr>
+            <tr><td><strong>Nombre del cliente</strong></td><td>Viene pre-rellenado</td><td><span class="badge b-green">Sí</span></td></tr>
+            <tr><td><strong>Dirección de la instalación</strong></td><td>Viene pre-rellenado</td><td><span class="badge b-green">Sí</span></td></tr>
+            <tr><td><strong>Tipo de instalación realizada</strong></td><td>Instalador</td><td><span class="badge b-green">Sí</span></td></tr>
+            <tr><td><strong>Materiales utilizados</strong></td><td>Instalador (color, medidas reales)</td><td><span class="badge b-green">Sí</span></td></tr>
+            <tr><td><strong>Incidencias o variaciones</strong></td><td>Instalador (si las hay)</td><td><span class="badge b-amber">Si procede</span></td></tr>
+            <tr><td><strong>Fecha y hora de finalización</strong></td><td>Instalador</td><td><span class="badge b-green">Sí</span></td></tr>
+            <tr><td><strong>Firma del cliente</strong></td><td>Cliente</td><td><span class="badge b-green">Sí</span></td></tr>
+            <tr><td><strong>Firma del instalador</strong></td><td>Instalador</td><td><span class="badge b-green">Sí</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-red">
+        <div class="alert-title">🚫 Sin firma no hay cierre</div>
+        <p>Si el cliente se niega a firmar (disconformidad con el resultado), NO abandones la instalación. Llama al coordinador desde el domicilio del cliente para gestionar la incidencia en el momento.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 8. INCIDENCIAS -->
+    <div class="section" id="incidencias">
+      <div class="section-eyebrow">08 · Incidencias</div>
+      <h2>Gestión de problemas frecuentes</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Incidencia</th><th>Acción inmediata</th><th>Escalar si...</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Medidas no coinciden</strong></td>
+              <td>Medir de nuevo. Si la diferencia &gt;2cm, llamar al coordinador antes de cortar.</td>
+              <td>Siempre que se supere el margen de 2cm</td>
+            </tr>
+            <tr>
+              <td><strong>Material insuficiente o incorrecto</strong></td>
+              <td>Llamar al coordinador. No improvises con material distinto al presupuestado.</td>
+              <td>Siempre</td>
+            </tr>
+            <tr>
+              <td><strong>Pared no admite taladro (pared de cristal, PVC frágil)</strong></td>
+              <td>Valorar sistema sin taladro. Comunicar al coordinador para ajustar presupuesto si aplica.</td>
+              <td>Si el cliente pide cambio de sistema</td>
+            </tr>
+            <tr>
+              <td><strong>Cliente pide cambios sobre la marcha</strong></td>
+              <td>Escuchar, anotar y llamar al coordinador. No ejecutes cambios que modifiquen el presupuesto sin autorización.</td>
+              <td>Siempre que afecte al precio o materiales</td>
+            </tr>
+            <tr>
+              <td><strong>Daño accidental en propiedad del cliente</strong></td>
+              <td>Informar al cliente inmediatamente, documentar con foto y llamar al coordinador. No ofrezcas compensación sin autorización.</td>
+              <td>Siempre</td>
+            </tr>
+            <tr>
+              <td><strong>Cliente insatisfecho con el resultado</strong></td>
+              <td>Escuchar sin defenderte. Llamar al coordinador. No abandones hasta recibir instrucciones.</td>
+              <td>Siempre</td>
+            </tr>
+            <tr>
+              <td><strong>Gato escapa durante el trabajo</strong></td>
+              <td>Informar al cliente inmediatamente. Ayudar a localizar si es posible. Documentar en el parte.</td>
+              <td>Si el cliente pide responsabilidades</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 9. TARIFAS -->
+    <div class="section" id="tarifas">
+      <div class="section-eyebrow">09 · Tarifas de referencia</div>
+      <h2>Precios orientativos al cliente</h2>
+      <p>Estas son las tarifas de referencia que maneja la empresa. Si un cliente te pregunta el precio, da estas cifras como orientación y remítele a la app de presupuestos o al coordinador para una cifra exacta.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Servicio</th><th>Precio base</th><th>Variables</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Ventana batiente (1 hoja)</strong></td><td>85–120 €</td><td>+15€ por hoja extra</td></tr>
+            <tr><td><strong>Ventana corredera</strong></td><td>110–150 €</td><td>Sistema de riel incluido</td></tr>
+            <tr><td><strong>Balcón estándar (≤6m²)</strong></td><td>150–250 €</td><td>+30€ por metro lineal extra</td></tr>
+            <tr><td><strong>Terraza mediana (6–15m²)</strong></td><td>250–450 €</td><td>+40€ por metro lineal extra</td></tr>
+            <tr><td><strong>Terraza grande (&gt;15m²)</strong></td><td>Presupuesto personalizado</td><td>Visita técnica previa recomendada</td></tr>
+            <tr><td><strong>Catio / espacio exterior</strong></td><td>Desde 400 €</td><td>Según dimensiones y estructura</td></tr>
+            <tr><td><strong>Kit DIY (envío nacional)</strong></td><td>45–120 €</td><td>Según tipo y tamaño</td></tr>
+            <tr><td><strong>Revisión / mantenimiento</strong></td><td>35–60 €</td><td>Desplazamiento incluido en Valencia</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-amber">
+        <div class="alert-title">💶 Nunca negocies precios en obra</div>
+        <p>Si el cliente pide descuento o discute el precio, remítele al coordinador. Tú ejecutas el trabajo, no negocias las tarifas. Cualquier ajuste económico debe quedar por escrito antes de empezar.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 10. CONTACTOS -->
+    <div class="section" id="contacto">
+      <div class="section-eyebrow">10 · Contactos clave</div>
+      <h2>A quién llamar y cuándo</h2>
+
+      <div class="cards-2">
+        <div class="card" style="border-left:3px solid var(--amber)">
+          <div class="card-icon">📞</div>
+          <h4>Coordinador de instalaciones</h4>
+          <p style="margin-bottom:0.5rem">Para: cambios en el parte, incidencias en obra, material insuficiente, cliente insatisfecho.</p>
+          <p><strong style="color:var(--amber)">+34 600 000 001</strong><br><span style="font-size:0.78rem;color:var(--light)">Lun–Vie 8:00–20:00 · Sáb 9:00–14:00</span></p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--green)">
+          <div class="card-icon">📱</div>
+          <h4>Grupo WhatsApp equipo</h4>
+          <p style="margin-bottom:0.5rem">Para: consultas rápidas, compartir fotos de obra, avisos de retraso, preguntas técnicas entre instaladores.</p>
+          <p><strong style="color:var(--green)">Grupo "Top Redes · Técnicos"</strong><br><span style="font-size:0.78rem;color:var(--light)">Acceso solo para el equipo autorizado</span></p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--blue)">
+          <div class="card-icon">🆘</div>
+          <h4>Urgencias fuera de horario</h4>
+          <p style="margin-bottom:0.5rem">Solo para incidencias graves: accidente en obra, daño importante en propiedad del cliente, situación de riesgo.</p>
+          <p><strong style="color:var(--blue)">+34 600 000 002</strong><br><span style="font-size:0.78rem;color:var(--light)">24h · Solo emergencias reales</span></p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--mid)">
+          <div class="card-icon">📦</div>
+          <h4>Almacén y material</h4>
+          <p style="margin-bottom:0.5rem">Para: solicitar material, notificar stock bajo del vehículo, devolver material sobrante.</p>
+          <p><strong style="color:var(--mid)">+34 600 000 003</strong><br><span style="font-size:0.78rem;color:var(--light)">Lun–Vie 8:00–14:00</span></p>
+        </div>
+      </div>
+
+      <div class="alert alert-green" style="margin-top:2rem">
+        <div class="alert-title">✓ Regla de oro</div>
+        <p>Ante la duda, llama. Ninguna llamada al coordinador es molestia si evita un problema mayor. Una incidencia mal gestionada en obra cuesta mucho más que una llamada de 2 minutos.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// Highlight active sidebar link on scroll
+const links = document.querySelectorAll('.sidebar-link[href^="#"]');
+const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const active = [...links].find(l => l.getAttribute('href') === '#' + e.target.id);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => s && observer.observe(s));
+</script>
+</body>
+</html>
