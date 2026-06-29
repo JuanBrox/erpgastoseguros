@@ -210,12 +210,39 @@
 </style>
 </head>
 <body>
+<script id="auth-guard">
+(function(){
+  const s = JSON.parse(sessionStorage.getItem('tr_user')||'null');
+  if(!s || Date.now()-s.ts > 8*3600*1000){
+    sessionStorage.removeItem('tr_user');
+    window.location.href='login.html';
+    return;
+  }
+  // Mostrar nombre usuario en navbar
+  document.addEventListener('DOMContentLoaded',function(){
+    const el = document.getElementById('nav-username');
+    if(el){ el.textContent = s.name; }
+    // Ocultar cards sin permiso
+    const map = {
+      'informe':'card-informe','seo':'card-seo','erp':'card-erp',
+      'gantt':'card-gantt','manual':'card-manual'
+    };
+    Object.entries(map).forEach(([page,id])=>{
+      const el2 = document.getElementById(id);
+      if(el2 && !s.pages.includes(page)) el2.style.display='none';
+    });
+    // Mostrar admin link solo a admin
+    const adminLink = document.getElementById('admin-link');
+    if(adminLink) adminLink.style.display = s.role==='admin' ? 'flex' : 'none';
+  });
+})();
+</script>
 
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="logo">Top<span>Redes</span></div>
   <div class="topbar-right">
-    <span class="topbar-badge">🔒 Intranet</span>
+    <span id="nav-username" style="font-size:0.78rem;color:rgba(255,255,255,0.5);font-weight:500"></span><span class="topbar-badge">🔒 Intranet</span>
     <span class="topbar-date" id="fecha"></span>
   </div>
 </div>
@@ -251,17 +278,17 @@
   <!-- ACCESO RÁPIDO -->
   <div class="sh"><h2>Acceso rápido</h2></div>
   <div class="quick-grid" style="margin-bottom:2.5rem">
-    <a href="pages/informe.html" class="quick-card">
+    <a href="pages/informe.html" class="quick-card" id="qc-informe">
       <div class="qi">📊</div>
       <div class="ql">Informe de Mercado</div>
       <div class="qs">Análisis sectorial 2026</div>
     </a>
-    <a href="pages/seo.html" class="quick-card">
+    <a href="pages/seo.html" class="quick-card" id="qc-seo">
       <div class="qi">🔍</div>
       <div class="ql">Plan SEO</div>
       <div class="qs">Estrategia 12 meses</div>
     </a>
-    <a href="pages/erp.html" class="quick-card">
+    <a href="pages/erp.html" class="quick-card" id="qc-erp">
       <div class="qi">⚙️</div>
       <div class="ql">ERP · Dashboard</div>
       <div class="qs">Gestión operaciones</div>
@@ -271,12 +298,12 @@
       <div class="ql">Web Corporativa</div>
       <div class="qs">Sitio público</div>
     </a>
-    <a href="pages/gantt.html" class="quick-card">
+    <a href="pages/gantt.html" class="quick-card" id="qc-gantt">
       <div class="qi">📅</div>
       <div class="ql">Gantt</div>
       <div class="qs">Plan de proyecto</div>
     </a>
-    <a href="pages/manual.html" class="quick-card">
+    <a href="pages/manual.html" class="quick-card" id="qc-manual">
       <div class="qi">📋</div>
       <div class="ql">Manual instaladores</div>
       <div class="qs">Protocolos técnicos</div>
@@ -287,7 +314,7 @@
   <div class="sh"><h2>Documentos estratégicos</h2></div>
   <div class="cards">
 
-    <a href="pages/informe.html" class="card">
+    <a href="pages/informe.html" class="card" id="card-informe">
       <div class="card-accent" style="background: linear-gradient(90deg, #C8641A, #E8924A)"></div>
       <div class="card-body">
         <div class="card-icon">📊</div>
@@ -306,7 +333,7 @@
       </div>
     </a>
 
-    <a href="pages/seo.html" class="card">
+    <a href="pages/seo.html" class="card" id="card-seo">
       <div class="card-accent" style="background: linear-gradient(90deg, #1A4D7A, #2E7DBE)"></div>
       <div class="card-body">
         <div class="card-icon">🔍</div>
@@ -325,7 +352,7 @@
       </div>
     </a>
 
-    <a href="pages/erp.html" class="card">
+    <a href="pages/erp.html" class="card" id="card-erp">
       <div class="card-accent" style="background: linear-gradient(90deg, #2D6A4F, #3D9970)"></div>
       <div class="card-body">
         <div class="card-icon">⚙️</div>
@@ -344,7 +371,7 @@
       </div>
     </a>
 
-    <a href="pages/gantt.html" class="card">
+    <a href="pages/gantt.html" class="card" id="card-gantt">
       <div class="card-accent" style="background: linear-gradient(90deg, #C8641A, #eda100)"></div>
       <div class="card-body">
         <div class="card-icon">📅</div>
@@ -363,7 +390,7 @@
       </div>
     </a>
 
-    <a href="pages/manual.html" class="card">
+    <a href="pages/manual.html" class="card" id="card-manual">
       <div class="card-accent" style="background: linear-gradient(90deg, #2D6A4F, #3D9970)"></div>
       <div class="card-body">
         <div class="card-icon">📋</div>

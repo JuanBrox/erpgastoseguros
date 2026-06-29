@@ -137,6 +137,19 @@ td strong{color:var(--dark)}
 </style>
 </head>
 <body>
+<script>
+(function(){
+  const s = JSON.parse(sessionStorage.getItem('tr_user')||'null');
+  if(!s || Date.now()-s.ts > 8*3600*1000){
+    sessionStorage.removeItem('tr_user');
+    window.location.href='../login.html';
+    return;
+  }
+  if(!s.pages.includes('manual')){
+    document.body.innerHTML='<div style="font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:1rem;background:#FAF7F3"><div style="font-size:3rem">🔒</div><h2 style="color:#1A1410">Acceso restringido</h2><p style="color:#9E8B7A">No tienes permiso para ver este documento.</p><a href="../index.html" style="color:#C8641A;font-weight:600">← Volver al hub</a></div>';
+  }
+})();
+</script>
 
 <!-- NAVBAR -->
 <div class="gs-navbar">
