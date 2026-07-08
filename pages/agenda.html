@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda · Instalaciones · Top Redes</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<style>
+:root{
+  --amber:#C8641A;--amber-l:rgba(200,100,26,0.1);--amber-d:#9E4A0E;
+  --dark:#1A1410;--mid:#5C4A3A;--light:#9E8B7A;
+  --cream:#FAF7F3;--white:#fff;--rule:rgba(90,74,62,0.1);
+  --green:#2D6A4F;--green-l:rgba(45,106,79,0.1);
+  --red:#B83232;--red-l:rgba(184,50,50,0.1);
+  --blue:#1A4D7A;--blue-l:rgba(26,77,122,0.1);
+  --gold:#9B7A00;--gold-l:rgba(155,122,0,0.1);
+  --pending:#9B7A00;--pending-l:rgba(155,122,0,0.12);
+  --inprogress:#1A4D7A;--inprogress-l:rgba(26,77,122,0.12);
+  --done:#2D6A4F;--done-l:rgba(45,106,79,0.12);
+  --tobill:#C8641A;--tobill-l:rgba(200,100,26,0.12);
+  --cobrado:#5C4A3A;--cobrado-l:rgba(90,74,62,0.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;font-size:14px}
+
+/* NAVBAR */
+.gs-navbar{position:sticky;top:0;z-index:9999;background:var(--dark);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.gs-navbar-left{display:flex;align-items:center;gap:1.2rem}
+.gs-back{display:flex;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.82rem;font-weight:500;padding:0.35rem 0.8rem;border-radius:7px;border:1px solid rgba(255,255,255,0.1);transition:all 0.15s}
+.gs-back:hover{background:rgba(255,255,255,0.07);color:#fff}
+.gs-logo{font-size:0.95rem;font-weight:700;color:#fff}
+.gs-logo span{color:var(--amber)}
+.gs-web-link{display:flex;align-items:center;gap:0.4rem;color:rgba(255,255,255,0.55);text-decoration:none;font-size:0.78rem;font-weight:500;padding:0.35rem 0.9rem;border-radius:7px;border:1px solid rgba(255,255,255,0.1);transition:all 0.15s}
+.gs-web-link:hover{background:var(--amber);color:#fff;border-color:var(--amber)}
+
+/* LAYOUT */
+.page-header{background:var(--dark);padding:2rem 2.5rem 1.8rem}
+.eyebrow{font-size:0.65rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--amber);margin-bottom:0.5rem}
+.page-header h1{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:#fff;margin-bottom:0.3rem}
+.page-header p{color:rgba(255,255,255,0.4);font-size:0.83rem}
+.main{padding:2rem 2.5rem;max-width:1200px}
+
+/* GCAL BANNER */
+.gcal-banner{background:var(--white);border:1px solid var(--rule);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.2rem}
+.gcal-icon{width:40px;height:40px;flex-shrink:0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;background:linear-gradient(135deg,#4285F4,#34A853)}
+.gcal-text h4{font-size:0.88rem;font-weight:600;margin-bottom:0.15rem}
+.gcal-text p{font-size:0.78rem;color:var(--light);margin:0}
+.gcal-actions{margin-left:auto;display:flex;gap:0.6rem;align-items:center}
+.btn{padding:0.45rem 1rem;border-radius:8px;border:1px solid var(--rule);background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;color:var(--dark);transition:all 0.15s;display:inline-flex;align-items:center;gap:0.4rem}
+.btn:hover{border-color:var(--amber);color:var(--amber)}
+.btn-primary{background:var(--amber);color:#fff;border-color:var(--amber)}
+.btn-primary:hover{background:var(--amber-d);border-color:var(--amber-d);color:#fff}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-green:hover{background:#1e4d38;border-color:#1e4d38;color:#fff}
+.btn-sm{padding:0.32rem 0.7rem;font-size:0.75rem}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem}
+.kpi{background:var(--white);border-radius:12px;padding:1.1rem 1.2rem;border:1px solid var(--rule);border-top:3px solid}
+.kpi.pending{border-top-color:var(--pending)}
+.kpi.inprogress{border-top-color:var(--inprogress)}
+.kpi.done{border-top-color:var(--done)}
+.kpi.tobill{border-top-color:var(--tobill)}
+.kpi.cobrado{border-top-color:var(--cobrado)}
+.kpi-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1}
+.kpi.pending .kpi-num{color:var(--pending)}
+.kpi.inprogress .kpi-num{color:var(--inprogress)}
+.kpi.done .kpi-num{color:var(--done)}
+.kpi.tobill .kpi-num{color:var(--tobill)}
+.kpi.cobrado .kpi-num{color:var(--cobrado)}
+.kpi-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--light);margin-top:0.3rem}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:0.7rem;margin-bottom:1.2rem;flex-wrap:wrap;align-items:center}
+.toolbar-left{display:flex;gap:0.5rem;align-items:center;flex:1}
+.filter-btn{padding:0.35rem 0.9rem;border-radius:20px;border:1.5px solid var(--rule);background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:500;cursor:pointer;color:var(--mid);transition:all 0.15s}
+.filter-btn:hover,.filter-btn.active{border-color:var(--amber);color:var(--amber);background:var(--amber-l)}
+.filter-btn.f-pending.active{border-color:var(--pending);color:var(--pending);background:var(--pending-l)}
+.filter-btn.f-inprogress.active{border-color:var(--inprogress);color:var(--inprogress);background:var(--inprogress-l)}
+.filter-btn.f-done.active{border-color:var(--done);color:var(--done);background:var(--done-l)}
+.filter-btn.f-tobill.active{border-color:var(--tobill);color:var(--tobill);background:var(--tobill-l)}
+.search-box{display:flex;align-items:center;gap:0.5rem;background:var(--white);border:1.5px solid var(--rule);border-radius:9px;padding:0.4rem 0.8rem}
+.search-box input{border:none;background:transparent;outline:none;font-size:0.82rem;color:var(--dark);width:170px}
+
+/* MAIN GRID */
+.grid-2{display:grid;grid-template-columns:1fr 380px;gap:1.2rem}
+
+/* LISTA */
+.card{background:var(--white);border-radius:14px;border:1px solid var(--rule)}
+.card-header{padding:1rem 1.3rem;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-weight:600;font-size:0.88rem}
+.card-body{padding:0}
+
+/* INSTALACIÓN ROW */
+.inst-row{padding:0.9rem 1.3rem;border-bottom:1px solid rgba(90,74,62,0.05);display:grid;grid-template-columns:auto 1fr auto auto;gap:0.8rem;align-items:center;transition:background 0.12s;cursor:pointer}
+.inst-row:last-child{border-bottom:none}
+.inst-row:hover{background:var(--amber-l)}
+.inst-row.selected{background:var(--amber-l);border-left:3px solid var(--amber)}
+.inst-date{text-align:center;min-width:42px}
+.inst-day{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--dark);line-height:1}
+.inst-month{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--light)}
+.inst-info h4{font-weight:500;font-size:0.85rem;margin-bottom:0.1rem}
+.inst-info p{font-size:0.75rem;color:var(--light)}
+.inst-amount{font-weight:700;font-size:0.9rem;color:var(--dark);text-align:right;white-space:nowrap}
+.inst-amount small{display:block;font-size:0.68rem;font-weight:400;color:var(--light)}
+
+/* BADGE ESTADO */
+.badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.65rem;border-radius:50px;font-size:0.68rem;font-weight:700;white-space:nowrap}
+.b-pending{background:var(--pending-l);color:var(--pending)}
+.b-inprogress{background:var(--inprogress-l);color:var(--inprogress)}
+.b-done{background:var(--done-l);color:var(--done)}
+.b-tobill{background:var(--tobill-l);color:var(--tobill)}
+.b-cobrado{background:var(--cobrado-l);color:var(--cobrado)}
+.b-gray{background:var(--rule);color:var(--mid)}
+
+/* DETAIL PANEL */
+.detail-panel{background:var(--white);border-radius:14px;border:1px solid var(--rule);position:sticky;top:70px;max-height:calc(100vh - 90px);overflow-y:auto}
+.detail-header{padding:1.2rem 1.3rem;border-bottom:1px solid var(--rule)}
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;color:var(--light);text-align:center;gap:0.7rem}
+.detail-empty span{font-size:2.5rem}
+.detail-content{padding:1.3rem}
+.detail-status{margin-bottom:1.2rem}
+.status-flow{display:flex;gap:0;margin-top:0.8rem}
+.status-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;position:relative;cursor:pointer}
+.status-step::before{content:'';position:absolute;top:14px;left:-50%;right:50%;height:2px;background:var(--rule);z-index:0}
+.status-step:first-child::before{display:none}
+.status-step.done-s::before{background:var(--green)}
+.status-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--rule);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.7rem;position:relative;z-index:1;transition:all 0.2s}
+.status-step.active .status-dot{border-color:var(--amber);background:var(--amber);color:#fff}
+.status-step.done-s .status-dot{border-color:var(--green);background:var(--green);color:#fff}
+.status-step-label{font-size:0.62rem;color:var(--light);text-align:center;line-height:1.3}
+.status-step.active .status-step-label{color:var(--amber);font-weight:600}
+.status-step.done-s .status-step-label{color:var(--green)}
+.detail-field{margin-bottom:0.9rem}
+.detail-field label{display:block;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--light);margin-bottom:0.25rem}
+.detail-field p{font-size:0.85rem;color:var(--dark)}
+.detail-actions{display:flex;flex-direction:column;gap:0.5rem;margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--rule)}
+.detail-section{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--light);margin:1.2rem 0 0.6rem;padding-top:1rem;border-top:1px solid var(--rule)}
+.gcal-event{background:var(--blue-l);border-radius:8px;padding:0.7rem 0.9rem;display:flex;align-items:center;gap:0.7rem;font-size:0.82rem;color:var(--blue);margin-bottom:0.5rem}
+.gcal-event a{color:var(--blue);text-decoration:none;font-weight:500}
+.gcal-event a:hover{text-decoration:underline}
+
+/* CALENDAR MINI */
+.mini-cal{background:var(--white);border-radius:14px;border:1px solid var(--rule);padding:1.2rem;margin-bottom:1.2rem}
+.mini-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;font-weight:600;font-size:0.88rem}
+.mini-cal-nav{background:none;border:none;cursor:pointer;color:var(--amber);font-size:1rem;padding:0.2rem 0.5rem}
+.cal-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-day-name{text-align:center;font-size:0.62rem;font-weight:600;color:var(--light);padding:0.2rem 0}
+.cal-day-cell{text-align:center;font-size:0.78rem;padding:0.3rem 0;border-radius:6px;cursor:pointer;color:var(--mid);position:relative;transition:all 0.12s}
+.cal-day-cell:hover{background:var(--cream)}
+.cal-day-cell.today{background:var(--amber);color:#fff;font-weight:700}
+.cal-day-cell.other-month{color:rgba(90,74,62,0.25)}
+.cal-day-cell .dot-row{display:flex;justify-content:center;gap:2px;position:absolute;bottom:1px;left:0;right:0}
+.cal-dot{width:4px;height:4px;border-radius:50%}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,20,16,0.5);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:16px;width:540px;max-width:92vw;max-height:90vh;overflow-y:auto;padding:2rem;box-shadow:0 24px 60px rgba(0,0,0,0.2)}
+.modal h3{font-size:1rem;font-weight:700;margin-bottom:1.3rem}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--mid);margin-bottom:0.35rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.65rem 0.9rem;border:1.5px solid var(--rule);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:var(--dark);background:var(--cream)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--amber);outline:none;background:var(--white)}
+.form-group textarea{height:80px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
+.modal-actions{display:flex;gap:0.7rem;justify-content:flex-end;margin-top:1.5rem}
+.gcal-note{background:var(--blue-l);border-radius:8px;padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.8rem;color:var(--blue);display:flex;gap:0.6rem}
+
+/* FACTURA MODAL */
+.factura-line{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--rule);font-size:0.85rem}
+.factura-line:last-child{border-bottom:none;font-weight:700;font-size:0.95rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--dark);color:#fff;padding:0.7rem 1.2rem;border-radius:10px;font-size:0.82rem;font-weight:500;z-index:999;opacity:0;transition:opacity 0.2s;pointer-events:none;display:flex;align-items:center;gap:0.5rem}
+.toast.show{opacity:1}
+
+@media(max-width:900px){
+  .grid-2{grid-template-columns:1fr}
+  .detail-panel{position:static;max-height:none}
+  .kpi-row{grid-template-columns:repeat(3,1fr)}
+  .main{padding:1.5rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- GUARD -->
+<script>
+(function(){
+  const s=JSON.parse(sessionStorage.getItem('tr_user')||'null');
+  if(!s||Date.now()-s.ts>8*3600*1000){sessionStorage.removeItem('tr_user');window.location.href='../login.html';}
+})();
+</script>
+
+<!-- NAVBAR -->
+<div class="gs-navbar">
+  <div class="gs-navbar-left">
+    <a href="../index.html" class="gs-back">← Volver al hub</a>
+    <span class="gs-logo">Top<span>Redes</span> · Intranet</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:0.8rem">
+    <span id="gcal-status" style="font-size:0.75rem;color:rgba(255,255,255,0.3)">⚪ Google Calendar desconectado</span>
+    <a href="https://webtopredes.netlify.app/" target="_blank" class="gs-web-link">🌐 Web ↗</a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="eyebrow">Operaciones · Agenda</div>
+  <h1>Agenda de instalaciones</h1>
+  <p>Gestión completa del ciclo: presupuesto aceptado → instalación → facturación → cobro</p>
+</div>
+
+<div class="main">
+
+  <!-- GCAL BANNER -->
+  <div class="gcal-banner" id="gcal-banner">
+    <div class="gcal-icon">📅</div>
+    <div class="gcal-text">
+      <h4>Conecta Google Calendar</h4>
+      <p>Sincroniza las instalaciones con tu calendario. Cada cita se crea automáticamente con todos los datos del cliente e instalador.</p>
+    </div>
+    <div class="gcal-actions">
+      <button class="btn btn-green" onclick="connectGCal()">🔗 Conectar Google Calendar</button>
+      <button class="btn btn-sm" onclick="showGCalHelp()">¿Cómo configurar?</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi pending"><div class="kpi-num" id="kpi-pending">0</div><div class="kpi-label">⏳ Pendientes</div></div>
+    <div class="kpi inprogress"><div class="kpi-num" id="kpi-inprogress">0</div><div class="kpi-label">🔧 En proceso</div></div>
+    <div class="kpi done"><div class="kpi-num" id="kpi-done">0</div><div class="kpi-label">✅ Finalizadas</div></div>
+    <div class="kpi tobill"><div class="kpi-num" id="kpi-tobill">0</div><div class="kpi-label">🧾 Facturar</div></div>
+    <div class="kpi cobrado"><div class="kpi-num" id="kpi-cobrado">0</div><div class="kpi-label">💶 Cobrado</div></div>
+  </div>
+
+  <div class="grid-2">
+
+    <!-- LISTA + MINICAL -->
+    <div>
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">Todas</button>
+          <button class="filter-btn f-pending" data-filter="pending" onclick="setFilter('pending',this)">⏳ Pendientes</button>
+          <button class="filter-btn f-inprogress" data-filter="inprogress" onclick="setFilter('inprogress',this)">🔧 En proceso</button>
+          <button class="filter-btn f-done" data-filter="done" onclick="setFilter('done',this)">✅ Finalizadas</button>
+          <button class="filter-btn f-tobill" data-filter="tobill" onclick="setFilter('tobill',this)">🧾 Facturar</button>
+        </div>
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" placeholder="Buscar cliente..." oninput="filterSearch(this.value)">
+        </div>
+        <button class="btn btn-primary" onclick="openNewInstall()">+ Nueva instalación</button>
+      </div>
+
+      <!-- LISTA -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Instalaciones</div>
+          <span id="count-label" style="font-size:0.75rem;color:var(--light)"></span>
+        </div>
+        <div class="card-body" id="install-list"></div>
+      </div>
+    </div>
+
+    <!-- PANEL DERECHO: DETALLE + MINICAL -->
+    <div>
+      <!-- MINI CALENDARIO -->
+      <div class="mini-cal">
+        <div class="mini-cal-header">
+          <button class="mini-cal-nav" onclick="calPrev()">‹</button>
+          <span id="cal-month-label"></span>
+          <button class="mini-cal-nav" onclick="calNext()">›</button>
+        </div>
+        <div class="cal-days-grid" id="cal-grid"></div>
+      </div>
+
+      <!-- DETALLE -->
+      <div class="detail-panel" id="detail-panel">
+        <div class="detail-empty">
+          <span>📋</span>
+          <p>Selecciona una instalación<br>para ver el detalle</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA INSTALACIÓN -->
+<div class="modal-overlay" id="modal-install">
+  <div class="modal">
+    <h3>📅 Nueva instalación</h3>
+    <div class="gcal-note">📅 <span>Se creará un evento en Google Calendar automáticamente con todos los datos.</span></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Cliente</label>
+        <input type="text" id="i-cliente" placeholder="Nombre del cliente">
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="tel" id="i-tel" placeholder="+34 600 000 000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dirección</label>
+      <input type="text" id="i-dir" placeholder="Calle Mayor 14, 3ºB, Valencia">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tipo de instalación</label>
+        <select id="i-tipo">
+          <option>Ventana batiente</option>
+          <option>Ventana corredera</option>
+          <option>Balcón estándar</option>
+          <option>Terraza mediana</option>
+          <option>Terraza grande</option>
+          <option>Catio / exterior</option>
+          <option>Sin taladro (alquiler)</option>
+          <option>Revisión / mantenimiento</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Instalador asignado</label>
+        <select id="i-instalador">
+          <option>Pedro Ruiz</option>
+          <option>Luis Gómez</option>
+          <option>María Vidal</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="i-fecha">
+      </div>
+      <div class="form-group">
+        <label>Hora</label>
+        <input type="time" id="i-hora" value="09:00">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Importe presupuestado (€)</label>
+        <input type="number" id="i-importe" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Duración estimada</label>
+        <select id="i-dur">
+          <option value="60">1 hora</option>
+          <option value="90">1,5 horas</option>
+          <option value="120" selected>2 horas</option>
+          <option value="180">3 horas</option>
+          <option value="240">4 horas</option>
+          <option value="360">6 horas</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notas para el instalador</label>
+      <textarea id="i-notas" placeholder="Piso 3º sin ascensor · Portero automático 3B · Llevar perfil aluminio gris..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-install')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveInstall()">💾 Guardar + Añadir a Google Calendar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FACTURA -->
+<div class="modal-overlay" id="modal-factura">
+  <div class="modal">
+    <h3>🧾 Generar factura</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre / Razón social</label>
+        <input type="text" id="f-nombre">
+      </div>
+      <div class="form-group">
+        <label>NIF / CIF</label>
+        <input type="text" id="f-nif" placeholder="12345678A">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dirección fiscal</label>
+      <input type="text" id="f-dir">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email factura</label>
+        <input type="email" id="f-email" placeholder="cliente@email.com">
+      </div>
+      <div class="form-group">
+        <label>Forma de pago</label>
+        <select id="f-pago">
+          <option>Transferencia bancaria</option>
+          <option>Bizum</option>
+          <option>Efectivo</option>
+          <option>Tarjeta</option>
+        </select>
+      </div>
+    </div>
+    <div class="detail-section" style="margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--rule)">Resumen factura</div>
+    <div id="factura-preview" style="background:var(--cream);border-radius:8px;padding:1rem;margin-top:0.5rem"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-factura')">Cancelar</button>
+      <button class="btn btn-primary" onclick="emitirFactura()">📄 Emitir factura</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GCAL SETUP -->
+<div class="modal-overlay" id="modal-gcal">
+  <div class="modal">
+    <h3>📅 Configurar Google Calendar</h3>
+    <p style="font-size:0.85rem;color:var(--mid);margin-bottom:1.2rem;line-height:1.7">Para sincronizar las instalaciones con Google Calendar sigue estos pasos:</p>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div style="display:flex;gap:0.8rem">
+        <div style="width:28px;height:28px;background:var(--amber);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.8rem;font-weight:700;flex-shrink:0">1</div>
+        <div>
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem">Crear proyecto en Google Cloud Console</div>
+          <p style="font-size:0.8rem;color:var(--mid)">Ve a <a href="https://console.cloud.google.com" target="_blank" style="color:var(--amber)">console.cloud.google.com</a> → Nuevo proyecto → Nombre: "TopRedes"</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.8rem">
+        <div style="width:28px;height:28px;background:var(--amber);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.8rem;font-weight:700;flex-shrink:0">2</div>
+        <div>
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem">Activar la API de Google Calendar</div>
+          <p style="font-size:0.8rem;color:var(--mid)">APIs y servicios → Habilitar APIs → busca "Google Calendar API" → Activar</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.8rem">
+        <div style="width:28px;height:28px;background:var(--amber);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.8rem;font-weight:700;flex-shrink:0">3</div>
+        <div>
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem">Crear credenciales OAuth 2.0</div>
+          <p style="font-size:0.8rem;color:var(--mid)">Credenciales → Crear credenciales → ID de cliente OAuth → Tipo: Aplicación web → URI autorizado: tu URL de Netlify</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.8rem">
+        <div style="width:28px;height:28px;background:var(--amber);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.8rem;font-weight:700;flex-shrink:0">4</div>
+        <div>
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem">Introduce el Client ID aquí</div>
+          <div class="form-group" style="margin-top:0.5rem;margin-bottom:0">
+            <input type="text" id="gcal-client-id" placeholder="xxxx.apps.googleusercontent.com" style="font-size:0.82rem">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-gcal')">Cancelar</button>
+      <button class="btn btn-green" onclick="saveGCalConfig()">✓ Guardar y conectar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── ESTADO ──────────────────────────────────────────────────────────────────
+const STATES = {
+  pending:   {label:'⏳ Pendiente',   cls:'b-pending'},
+  inprogress:{label:'🔧 En proceso',  cls:'b-inprogress'},
+  done:      {label:'✅ Finalizada',  cls:'b-done'},
+  tobill:    {label:'🧾 A facturar',  cls:'b-tobill'},
+  cobrado:   {label:'💶 Cobrado',     cls:'b-cobrado'},
+};
+
+const NEXT_STATE = {
+  pending:'inprogress', inprogress:'done', done:'tobill', tobill:'cobrado', cobrado:null
+};
+const NEXT_LABEL = {
+  pending:'▶ Marcar en proceso', inprogress:'✅ Marcar finalizada',
+  done:'🧾 Pasar a facturar', tobill:'💶 Marcar cobrado', cobrado:null
+};
+
+let installs = [];
+let selectedId = null;
+let filterState = 'all';
+let searchTerm = '';
+let calDate = new Date();
+let gcalConnected = false;
+let gcalClientId = '';
+
+function loadData(){
+  const saved = localStorage.getItem('tr_installs');
+  if(saved){ try{ installs = JSON.parse(saved); return; }catch(e){} }
+  // Datos demo
+  const today = new Date();
+  const fmt = d => d.toISOString().split('T')[0];
+  const d = n => { const x=new Date(today); x.setDate(x.getDate()+n); return fmt(x); };
+  installs = [
+    {id:'i1',cliente:'Carmen Ruiz',tel:'+34 611 222 333',dir:'C/ Colón 14, 3ºB, Valencia',tipo:'Balcón estándar',instalador:'Pedro Ruiz',fecha:d(-5),hora:'09:30',importe:280,duracion:120,estado:'cobrado',notas:'Piso 3º, sin ascensor. Balcón 3×2m.',gcalId:null,facturaNum:'2026-001'},
+    {id:'i2',cliente:'José Martín',tel:'+34 622 333 444',dir:'Av. del Mar 7, Valencia',tipo:'2 Ventanas batiente',instalador:'Luis Gómez',fecha:d(-2),hora:'12:00',importe:190,duracion:90,estado:'tobill',notas:'2 ventanas dormitorio. RAL 7016 gris antracita.',gcalId:null,facturaNum:null},
+    {id:'i3',cliente:'Lucía Mora',tel:'+34 633 444 555',dir:'Av. Libertad 5, Alicante',tipo:'Terraza mediana',instalador:'María Vidal',fecha:d(0),hora:'10:00',importe:420,duracion:240,estado:'inprogress',notas:'Terraza 12m², orientación sur.',gcalId:'gcal_abc123',facturaNum:null},
+    {id:'i4',cliente:'David Cano',tel:'+34 644 555 666',dir:'C/ Gran Vía 33, Madrid',tipo:'Balcón estándar',instalador:'Pedro Ruiz',fecha:d(2),hora:'09:00',importe:310,duracion:120,estado:'pending',notas:'Portero automático 4B. Llevar perfil blanco.',gcalId:'gcal_def456',facturaNum:null},
+    {id:'i5',cliente:'Elena Soto',tel:'+34 655 666 777',dir:'Passeig de Gràcia 55, Barcelona',tipo:'Ventana corredera',instalador:'Luis Gómez',fecha:d(4),hora:'11:30',importe:150,duracion:90,estado:'pending',notas:'',gcalId:null,facturaNum:null},
+    {id:'i6',cliente:'Roberto Paz',tel:'+34 666 777 888',dir:'C/ Sol 3, Barcelona',tipo:'Revisión / mantenimiento',instalador:'María Vidal',fecha:d(7),hora:'16:00',importe:45,duracion:60,estado:'pending',notas:'Revisión anual. Red instalada hace 2 años.',gcalId:null,facturaNum:null},
+  ];
+  saveData();
+}
+function saveData(){ localStorage.setItem('tr_installs',JSON.stringify(installs)); }
+
+function loadGCalConfig(){
+  gcalClientId = localStorage.getItem('tr_gcal_client_id')||'';
+  gcalConnected = !!gcalClientId;
+  updateGCalStatus();
+}
+
+function updateGCalStatus(){
+  const el = document.getElementById('gcal-status');
+  const banner = document.getElementById('gcal-banner');
+  if(gcalConnected){
+    el.textContent = '🟢 Google Calendar conectado';
+    el.style.color = 'rgba(45,106,79,0.8)';
+    banner.style.display='none';
+  } else {
+    el.textContent = '⚪ Google Calendar desconectado';
+    el.style.color = 'rgba(255,255,255,0.3)';
+    banner.style.display='flex';
+  }
+}
+
+// ─── RENDER LISTA ──────────────────────────────────────────────────────────
+function getFiltered(){
+  return installs.filter(i=>{
+    const stateOk = filterState==='all' || i.estado===filterState;
+    const searchOk = !searchTerm || i.cliente.toLowerCase().includes(searchTerm.toLowerCase()) || i.dir.toLowerCase().includes(searchTerm.toLowerCase());
+    return stateOk && searchOk;
+  }).sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+}
+
+function renderList(){
+  updateKPIs();
+  const list = document.getElementById('install-list');
+  const filtered = getFiltered();
+  document.getElementById('count-label').textContent = `${filtered.length} instalación${filtered.length!==1?'es':''}`;
+
+  if(!filtered.length){
+    list.innerHTML='<div style="padding:3rem;text-align:center;color:var(--light);font-size:0.85rem">No hay instalaciones con este filtro</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(i=>{
+    const d = new Date(i.fecha+'T12:00:00');
+    const day = d.getDate();
+    const mon = d.toLocaleDateString('es-ES',{month:'short'}).toUpperCase();
+    const st = STATES[i.estado];
+    const gcalIcon = i.gcalId ? '📅' : '';
+    return `<div class="inst-row${selectedId===i.id?' selected':''}" onclick="selectInstall('${i.id}')">
+      <div class="inst-date"><div class="inst-day">${day}</div><div class="inst-month">${mon}</div></div>
+      <div class="inst-info">
+        <h4>${i.cliente} ${gcalIcon}</h4>
+        <p>${i.tipo} · ${i.instalador} · ${i.hora}</p>
+        <p style="color:var(--light);font-size:0.72rem">${i.dir}</p>
+      </div>
+      <span class="badge ${st.cls}">${st.label}</span>
+      <div class="inst-amount">${i.importe}€<small>${i.facturaNum||''}</small></div>
+    </div>`;
+  }).join('');
+}
+
+function updateKPIs(){
+  ['pending','inprogress','done','tobill','cobrado'].forEach(s=>{
+    document.getElementById('kpi-'+s).textContent = installs.filter(i=>i.estado===s).length;
+  });
+}
+
+// ─── DETALLE ──────────────────────────────────────────────────────────────
+function selectInstall(id){
+  selectedId = id;
+  renderList();
+  renderDetail();
+}
+
+function renderDetail(){
+  const panel = document.getElementById('detail-panel');
+  if(!selectedId){ panel.innerHTML='<div class="detail-empty"><span>📋</span><p>Selecciona una instalación<br>para ver el detalle</p></div>'; return; }
+  const i = installs.find(x=>x.id===selectedId);
+  if(!i){ panel.innerHTML=''; return; }
+  const st = STATES[i.estado];
+  const stateOrder = ['pending','inprogress','done','tobill','cobrado'];
+  const curIdx = stateOrder.indexOf(i.estado);
+  const d = new Date(i.fecha+'T12:00:00');
+  const dateStr = d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  const nextAction = NEXT_LABEL[i.estado];
+  const nextState = NEXT_STATE[i.estado];
+
+  panel.innerHTML=`
+    <div class="detail-header">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+        <div style="font-weight:700;font-size:0.92rem">${i.cliente}</div>
+        <span class="badge ${st.cls}">${st.label}</span>
+      </div>
+      <div style="font-size:0.78rem;color:var(--light)">${i.tipo} · ${dateStr} ${i.hora}</div>
+    </div>
+    <div class="detail-content">
+
+      <!-- FLUJO DE ESTADOS -->
+      <div class="detail-status">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--light);margin-bottom:0.5rem">Flujo de trabajo</div>
+        <div class="status-flow">
+          ${stateOrder.map((s,idx)=>{
+            const isDone = idx < curIdx;
+            const isActive = idx === curIdx;
+            const icons = ['📋','🔧','✅','🧾','💶'];
+            return `<div class="status-step ${isDone?'done-s':''} ${isActive?'active':''}">
+              <div class="status-dot">${isDone?'✓':icons[idx]}</div>
+              <div class="status-step-label">${STATES[s].label.split(' ')[1]||STATES[s].label}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- DATOS -->
+      <div class="detail-field"><label>Instalador</label><p>${i.instalador}</p></div>
+      <div class="detail-field"><label>Dirección</label><p>${i.dir}</p></div>
+      <div class="detail-field"><label>Teléfono cliente</label><p><a href="tel:${i.tel}" style="color:var(--amber)">${i.tel}</a> · <a href="https://wa.me/${i.tel.replace(/\s+/g,'').replace('+','')}" target="_blank" style="color:var(--green)">💬 WhatsApp</a></p></div>
+      <div class="detail-field"><label>Importe</label><p style="font-size:1.1rem;font-weight:700;color:var(--amber)">${i.importe} €</p></div>
+      ${i.notas?`<div class="detail-field"><label>Notas</label><p>${i.notas}</p></div>`:''}
+      ${i.facturaNum?`<div class="detail-field"><label>Nº Factura</label><p style="font-weight:600;color:var(--green)">${i.facturaNum}</p></div>`:''}
+
+      <!-- GOOGLE CALENDAR -->
+      ${i.gcalId
+        ? `<div class="gcal-event">📅 <a href="https://calendar.google.com/calendar/event?eid=${i.gcalId}" target="_blank">Ver en Google Calendar ↗</a></div>`
+        : `<button class="btn btn-sm" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="addToGCal('${i.id}')">📅 Añadir a Google Calendar</button>`
+      }
+
+      <!-- ACCIONES -->
+      <div class="detail-actions">
+        ${nextAction ? `<button class="btn btn-primary" onclick="advanceState('${i.id}')">${nextAction}</button>` : ''}
+        ${i.estado==='done' ? `<button class="btn btn-primary" onclick="openFactura('${i.id}')">🧾 Generar factura</button>` : ''}
+        ${i.estado==='tobill' ? `<button class="btn btn-primary" onclick="openFactura('${i.id}')">🧾 Generar factura</button>` : ''}
+        <button class="btn" onclick="editInstall('${i.id}')">✏️ Editar</button>
+        <button class="btn" onclick="deleteInstall('${i.id}')" style="color:var(--red)">🗑 Eliminar</button>
+      </div>
+
+    </div>`;
+}
+
+function advanceState(id){
+  const i = installs.find(x=>x.id===id);
+  if(!i||!NEXT_STATE[i.estado]) return;
+  i.estado = NEXT_STATE[i.estado];
+  saveData();
+  renderList();
+  renderDetail();
+  showToast(`✓ Estado actualizado: ${STATES[i.estado].label}`);
+}
+
+function deleteInstall(id){
+  if(!confirm('¿Eliminar esta instalación?')) return;
+  installs = installs.filter(x=>x.id!==id);
+  selectedId = null;
+  saveData();
+  renderList();
+  renderDetail();
+  showToast('🗑 Instalación eliminada');
+}
+
+// ─── NUEVA INSTALACIÓN ────────────────────────────────────────────────────
+function openNewInstall(){
+  document.getElementById('i-cliente').value='';
+  document.getElementById('i-tel').value='';
+  document.getElementById('i-dir').value='';
+  document.getElementById('i-tipo').value='Balcón estándar';
+  document.getElementById('i-instalador').value='Pedro Ruiz';
+  document.getElementById('i-fecha').value=new Date().toISOString().split('T')[0];
+  document.getElementById('i-hora').value='09:00';
+  document.getElementById('i-importe').value='';
+  document.getElementById('i-notas').value='';
+  document.getElementById('modal-install').classList.add('open');
+  setTimeout(()=>document.getElementById('i-cliente').focus(),100);
+}
+
+function saveInstall(){
+  const cliente = document.getElementById('i-cliente').value.trim();
+  const fecha = document.getElementById('i-fecha').value;
+  const importe = +document.getElementById('i-importe').value;
+  if(!cliente||!fecha){ showToast('⚠️ Completa cliente y fecha'); return; }
+
+  const inst = {
+    id: 'i'+Date.now(),
+    cliente, tel: document.getElementById('i-tel').value,
+    dir: document.getElementById('i-dir').value,
+    tipo: document.getElementById('i-tipo').value,
+    instalador: document.getElementById('i-instalador').value,
+    fecha, hora: document.getElementById('i-hora').value,
+    importe, duracion: +document.getElementById('i-dur').value,
+    estado:'pending',
+    notas: document.getElementById('i-notas').value,
+    gcalId: null, facturaNum: null,
+  };
+
+  installs.push(inst);
+  saveData();
+  closeModal('modal-install');
+  renderList();
+  selectedId = inst.id;
+  renderDetail();
+  renderCalendar();
+
+  // Intentar añadir a Google Calendar
+  if(gcalConnected){ addToGCal(inst.id); }
+  else { showToast('✓ Instalación creada. Conecta Google Calendar para sincronizar.'); }
+}
+
+function editInstall(id){ showToast('✏️ Edición disponible próximamente'); }
+
+// ─── GOOGLE CALENDAR ─────────────────────────────────────────────────────
+function connectGCal(){ document.getElementById('modal-gcal').classList.add('open'); }
+function showGCalHelp(){ document.getElementById('modal-gcal').classList.add('open'); }
+
+function saveGCalConfig(){
+  const cid = document.getElementById('gcal-client-id').value.trim();
+  if(!cid){ showToast('⚠️ Introduce el Client ID'); return; }
+  gcalClientId = cid;
+  gcalConnected = true;
+  localStorage.setItem('tr_gcal_client_id', cid);
+  closeModal('modal-gcal');
+  updateGCalStatus();
+  showToast('🟢 Google Calendar configurado correctamente');
+}
+
+function addToGCal(id){
+  const i = installs.find(x=>x.id===id);
+  if(!i) return;
+
+  if(!gcalConnected){
+    showToast('⚠️ Primero conecta Google Calendar');
+    document.getElementById('modal-gcal').classList.add('open');
+    return;
+  }
+
+  // Construir URL de Google Calendar para crear evento
+  const d = i.fecha.replace(/-/g,'');
+  const [hh,mm] = i.hora.split(':');
+  const startDt = `${d}T${hh}${mm}00`;
+  const endDate = new Date(i.fecha+'T'+i.hora);
+  endDate.setMinutes(endDate.getMinutes()+(i.duracion||120));
+  const endDt = endDate.toISOString().replace(/-|:|\.\d{3}/g,'').slice(0,15);
+
+  const title = encodeURIComponent(`🔧 Top Redes · ${i.tipo} · ${i.cliente}`);
+  const details = encodeURIComponent(
+    `Cliente: ${i.cliente}\nTeléfono: ${i.tel}\nInstalador: ${i.instalador}\nImporte: ${i.importe}€\n\nNotas: ${i.notas||'—'}`
+  );
+  const loc = encodeURIComponent(i.dir);
+
+  const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDt}/${endDt}&details=${details}&location=${loc}`;
+
+  // Marcar como vinculado (en producción real usaríamos la API con OAuth)
+  i.gcalId = 'manual_'+i.id;
+  saveData();
+  renderDetail();
+  renderList();
+
+  window.open(gcalUrl, '_blank');
+  showToast('📅 Abriendo Google Calendar para confirmar el evento...');
+}
+
+// ─── FACTURA ─────────────────────────────────────────────────────────────
+function openFactura(id){
+  const i = installs.find(x=>x.id===id);
+  if(!i) return;
+  document.getElementById('f-nombre').value = i.cliente;
+  document.getElementById('f-dir').value = i.dir;
+  document.getElementById('f-nif').value = '';
+  document.getElementById('f-email').value = '';
+
+  const iva = Math.round(i.importe*0.21*100)/100;
+  const total = Math.round((i.importe+iva)*100)/100;
+  document.getElementById('factura-preview').innerHTML=`
+    <div class="factura-line"><span>${i.tipo}</span><span>${i.importe} €</span></div>
+    <div class="factura-line"><span>IVA (21%)</span><span>${iva} €</span></div>
+    <div class="factura-line"><span>TOTAL</span><span>${total} €</span></div>
+  `;
+  closeModal('modal-install');
+  document.getElementById('modal-factura').classList.add('open');
+
+  // Guardar referencia al id activo para emitir
+  document.getElementById('modal-factura').dataset.installId = id;
+}
+
+function emitirFactura(){
+  const id = document.getElementById('modal-factura').dataset.installId;
+  const i = installs.find(x=>x.id===id);
+  if(!i) return;
+  const nombre = document.getElementById('f-nombre').value.trim();
+  if(!nombre){ showToast('⚠️ Introduce el nombre del cliente'); return; }
+
+  const year = new Date().getFullYear();
+  const num = installs.filter(x=>x.facturaNum&&x.facturaNum.startsWith(year+'')).length+1;
+  i.facturaNum = `${year}-${String(num).padStart('3','0')}`;
+  if(i.estado==='done') i.estado='tobill';
+  saveData();
+  closeModal('modal-factura');
+  renderList();
+  renderDetail();
+  showToast(`🧾 Factura ${i.facturaNum} generada. Envía por email al cliente.`);
+}
+
+// ─── MINI CALENDAR ────────────────────────────────────────────────────────
+function renderCalendar(){
+  const DAYS = ['L','M','X','J','V','S','D'];
+  const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('cal-month-label').textContent = `${MONTHS[calDate.getMonth()]} ${calDate.getFullYear()}`;
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = DAYS.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+
+  const firstDay = new Date(calDate.getFullYear(), calDate.getMonth(), 1);
+  const lastDay = new Date(calDate.getFullYear(), calDate.getMonth()+1, 0);
+  let startDow = firstDay.getDay(); // 0=dom
+  startDow = startDow===0?6:startDow-1; // Lunes primero
+
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+
+  // Días mes anterior
+  for(let i=0;i<startDow;i++){
+    const d = new Date(firstDay); d.setDate(d.getDate()-(startDow-i));
+    grid.innerHTML+=`<div class="cal-day-cell other-month">${d.getDate()}</div>`;
+  }
+
+  // Días del mes
+  for(let d=1;d<=lastDay.getDate();d++){
+    const dateStr = `${calDate.getFullYear()}-${String(calDate.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayInstalls = installs.filter(i=>i.fecha===dateStr);
+    const isToday = dateStr===todayStr;
+    const dots = dayInstalls.slice(0,3).map(i=>{
+      const colors={pending:'#9B7A00',inprogress:'#1A4D7A',done:'#2D6A4F',tobill:'#C8641A',cobrado:'#5C4A3A'};
+      return `<div class="cal-dot" style="background:${colors[i.estado]||'#9E8B7A'}"></div>`;
+    }).join('');
+    grid.innerHTML+=`<div class="cal-day-cell${isToday?' today':''}" title="${dayInstalls.map(i=>i.cliente).join(', ')}">${d}${dots?`<div class="dot-row">${dots}</div>`:''}</div>`;
+  }
+}
+
+function calPrev(){ calDate.setMonth(calDate.getMonth()-1); renderCalendar(); }
+function calNext(){ calDate.setMonth(calDate.getMonth()+1); renderCalendar(); }
+
+// ─── FILTROS ──────────────────────────────────────────────────────────────
+function setFilter(f,btn){
+  filterState=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
+function filterSearch(val){ searchTerm=val; renderList(); }
+
+// ─── MODAL HELPERS ────────────────────────────────────────────────────────
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+
+// ─── TOAST ────────────────────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+loadData();
+loadGCalConfig();
+renderList();
+renderDetail();
+renderCalendar();
+</script>
+</body>
+</html>
